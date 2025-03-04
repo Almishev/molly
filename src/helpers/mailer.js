@@ -38,8 +38,23 @@ export async function sendOrderNotification(order) {
     // Изчисляване на общата сума
     let subtotal = 0;
     for (const product of order.cartProducts) {
-      const price = product.price || 0;
-      subtotal += price * (product.quantity || 1);
+      let productPrice = product.basePrice || 0;
+      
+      // Add size price if available
+      if (product.size && product.size.price) {
+        productPrice += product.size.price;
+      }
+      
+      // Add extras prices if available
+      if (product.extras && product.extras.length > 0) {
+        for (const extra of product.extras) {
+          if (extra.price) {
+            productPrice += extra.price;
+          }
+        }
+      }
+      
+      subtotal += productPrice * (product.quantity || 1);
     }
     const total = subtotal + 1; // 1 лв за доставка
     

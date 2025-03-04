@@ -89,7 +89,7 @@ export default function CategoriesPage() {
         <div className="flex gap-2 items-end">
           <div className="grow">
             <label>
-              {editedCategory ? 'Update category' : 'New category name'}
+              {editedCategory ? 'Промени категория' : 'Създай нова категория'}
               {editedCategory && (
                 <>: <b>{editedCategory.name}</b></>
               )}
@@ -101,7 +101,7 @@ export default function CategoriesPage() {
           </div>
           <div className="pb-2 flex gap-2">
             <button className="border border-primary" type="submit">
-              {editedCategory ? 'Update' : 'Create'}
+              {editedCategory ? 'Запази' : 'Създай'}
             </button>
             <button
               type="button"
@@ -109,13 +109,13 @@ export default function CategoriesPage() {
                 setEditedCategory(null);
                 setCategoryName('');
               }}>
-              Cancel
+              Изход
             </button>
           </div>
         </div>
       </form>
       <div>
-        <h2 className="mt-8 text-sm text-gray-200">Existing categories</h2>
+        <h2 className="mt-8 text-sm text-gray-200">Съществуващи категории</h2>
         {categories?.length > 0 && categories.map(c => (
           <div
             key={c._id}
@@ -130,10 +130,10 @@ export default function CategoriesPage() {
                         setCategoryName(c.name);
                       }}
               >
-                Edit
+                Редактирай
               </button>
               <DeleteButton
-                label="Delete"
+                label="Изтрий"
                 onDelete={() => handleDeleteClick(c._id)} />
             </div>
           </div>

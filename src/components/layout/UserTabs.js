@@ -38,7 +38,7 @@ export default function UserTabs({isAdmin}) {
         className={path === '/orders' ? 'active' : ''}
         href={'/orders'}
       >
-        Поръчки
+        {isAdmin ? 'Поръчки' : 'Чакащи поръчки'}
       </Link>
     </div>
   );
