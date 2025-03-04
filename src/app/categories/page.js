@@ -115,12 +115,12 @@ export default function CategoriesPage() {
         </div>
       </form>
       <div>
-        <h2 className="mt-8 text-sm text-gray-500">Existing categories</h2>
+        <h2 className="mt-8 text-sm text-gray-200">Existing categories</h2>
         {categories?.length > 0 && categories.map(c => (
           <div
             key={c._id}
-            className="bg-gray-100 rounded-xl p-2 px-4 flex gap-1 mb-1 items-center">
-            <div className="grow">
+            className="bg-[#2d2d2d] rounded-xl p-2 px-4 flex gap-1 mb-1 items-center">
+            <div className="grow text-gray-100">
               {c.name}
             </div>
             <div className="flex gap-1">

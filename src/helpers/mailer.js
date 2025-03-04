@@ -1,0 +1,131 @@
+import nodemailer from 'nodemailer';
+import { cartProductPrice } from '@/components/AppContext';
+
+// Конфигурация на транспортера за изпращане на имейли
+const transporter = nodemailer.createTransport({
+  host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+  port: process.env.EMAIL_PORT || 587,
+  secure: false, // true за 465, false за други портове
+  auth: {
+    user: process.env.EMAIL_USER || 'mineralhotelinfo@gmail.com',
+    pass: process.env.EMAIL_PASS || 'ylnppaqssnyjftcc',
+  },
+});
+
+/**
+ * Изпраща имейл за нова поръчка
+ * @param {Object} order - Информация за поръчката
+ * @returns {Promise} - Promise с резултата от изпращането
+ */
+export async function sendOrderNotification(order) {
+  try {
+    // Форматиране на продуктите в поръчката
+    const productsHtml = order.cartProducts.map(product => {
+      const extras = product.extras?.length > 0 
+        ? `<br>Екстри: ${product.extras.map(e => e.name).join(', ')}` 
+        : '';
+      const size = product.size ? `<br>Размер: ${product.size.name}` : '';
+      
+      return `
+        <div style="margin-bottom: 10px; padding: 10px; border-bottom: 1px solid #eee;">
+          <strong>${product.name}</strong> x ${product.quantity || 1}
+          ${size}
+          ${extras}
+        </div>
+      `;
+    }).join('');
+    
+    // Изчисляване на общата сума
+    let subtotal = 0;
+    for (const product of order.cartProducts) {
+      const price = product.price || 0;
+      subtotal += price * (product.quantity || 1);
+    }
+    const total = subtotal + 1; // 1 лв за доставка
+    
+    // Информация за адреса
+    const addressInfo = `
+      <p><strong>Телефон:</strong> ${order.phone}</p>
+      <p><strong>Адрес:</strong> ${order.streetAddress}</p>
+      <p><strong>Град:</strong> ${order.city}</p>
+      <p><strong>Пощенски код:</strong> ${order.postalCode || 'Не е посочен'}</p>
+      <p><strong>Държава:</strong> ${order.country || 'България'}</p>
+    `;
+    
+    // Изпращане на имейла
+    const info = await transporter.sendMail({
+      from: `"MOLLY Food Ordering" <${process.env.EMAIL_USER || 'mineralhotelinfo@gmail.com'}>`,
+      to: 'antonalmishev123@gmail.com',
+      subject: `Нова поръчка #${order._id}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #4169E1; text-align: center;">Нова поръчка</h2>
+          <p style="text-align: center;">Имате нова поръчка от ${order.userEmail || 'гост'}</p>
+          
+          <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <h3>Информация за поръчката</h3>
+            <p><strong>Номер на поръчка:</strong> ${order._id}</p>
+            <p><strong>Дата:</strong> ${order.bulgarianTime || new Date(order.createdAt).toLocaleString('bg-BG')}</p>
+            <p><strong>Статус на плащане:</strong> ${order.paid ? 'Платена' : 'Неплатена (плащане при доставка)'}</p>
+          </div>
+          
+          <div style="margin: 20px 0;">
+            <h3>Продукти</h3>
+            ${productsHtml}
+            
+            <div style="text-align: right; margin-top: 15px;">
+              <p><strong>Междинна сума:</strong> ${subtotal} лв</p>
+              <p><strong>Доставка:</strong> 1 лв</p>
+              <p style="font-size: 18px;"><strong>Общо:</strong> ${total} лв</p>
+            </div>
+          </div>
+          
+          <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <h3>Информация за доставка</h3>
+            ${addressInfo}
+          </div>
+          
+          <p style="text-align: center; margin-top: 30px; color: #777;">
+            Това е автоматично генериран имейл. Моля, не отговаряйте на този имейл.
+          </p>
+        </div>
+      `,
+    });
+    
+    console.log('Email sent successfully:', info.messageId);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error('Error sending email:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Изпраща тестов имейл за проверка на конфигурацията
+ * @returns {Promise} - Promise с резултата от изпращането
+ */
+export async function sendTestEmail() {
+  try {
+    const info = await transporter.sendMail({
+      from: `"MOLLY Food Ordering" <${process.env.EMAIL_USER || 'mineralhotelinfo@gmail.com'}>`,
+      to: 'antonalmishev123@gmail.com',
+      subject: 'Тестов имейл от MOLLY Food Ordering',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; text-align: center;">
+          <h2 style="color: #4169E1;">Тестов имейл</h2>
+          <p>Това е тестов имейл от системата за поръчки MOLLY Food Ordering.</p>
+          <p>Ако получавате този имейл, значи конфигурацията за изпращане на имейли работи правилно.</p>
+          <p style="margin-top: 30px; color: #777;">
+            Това е автоматично генериран имейл. Моля, не отговаряйте на този имейл.
+          </p>
+        </div>
+      `,
+    });
+    
+    console.log('Test email sent successfully:', info.messageId);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error('Error sending test email:', error);
+    return { success: false, error: error.message };
+  }
+} 

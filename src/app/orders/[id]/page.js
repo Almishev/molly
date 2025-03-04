@@ -38,10 +38,10 @@ export default function OrderPage() {
   return (
     <section className="max-w-2xl mx-auto mt-8">
       <div className="text-center">
-        <SectionHeaders mainHeader="Your order" />
+        <SectionHeaders mainHeader="Вашата поръчка" />
         <div className="mt-4 mb-8">
-          <p>Thanks for your order.</p>
-          <p>We will call you when your order will be on the way.</p>
+          <p>Благодарим Ви за поръчката.</p>
+          <p>Ще Ви се обадим когато поръчката е готова.</p>
         </div>
       </div>
       {loadingOrder && (
@@ -53,21 +53,25 @@ export default function OrderPage() {
             {order.cartProducts.map(product => (
               <CartProduct key={product._id} product={product} />
             ))}
-            <div className="text-right py-2 text-gray-500">
-              Subtotal:
-              <span className="text-black font-bold inline-block w-8">${subtotal}</span>
-              <br />
-              Delivery:
-              <span className="text-black font-bold inline-block w-8">$5</span>
-              <br />
-              Total:
-              <span className="text-black font-bold inline-block w-8">
-                ${subtotal + 5}
-              </span>
+            <div className="text-right py-4 px-2 bg-black rounded-lg mt-4">
+              <div className="flex justify-between mb-2">
+                <span className="text-gray-300">Междинна сума:</span>
+                <span className="text-white font-bold">{subtotal} лв</span>
+              </div>
+              <div className="flex justify-between mb-2">
+                <span className="text-gray-300">Доставка:</span>
+                <span className="text-white font-bold">1 лв</span>
+              </div>
+              <div className="flex justify-between border-t border-gray-700 pt-2 mt-2">
+                <span className="text-gray-300 font-semibold">Общо:</span>
+                <span className="text-white font-bold text-lg">
+                  {subtotal + 1} лв
+                </span>
+              </div>
             </div>
           </div>
           <div>
-            <div className="bg-gray-100 p-4 rounded-lg">
+            <div className="bg-black p-4 rounded-lg">
               <AddressInputs
                 disabled={true}
                 addressProps={order}

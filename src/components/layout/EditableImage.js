@@ -12,19 +12,23 @@ export default function EditableImage({link, setLink}) {
       const uploadPromise = fetch('/api/upload', {
         method: 'POST',
         body: data,
-      }).then(response => {
+      }).then(async response => {
         if (response.ok) {
-          return response.json().then(link => {
-            setLink(link);
-          })
+          const data = await response.json();
+          if (data.error) {
+            throw new Error(data.error);
+          }
+          setLink(data);
+        } else {
+          const data = await response.json();
+          throw new Error(data.error || 'Upload failed');
         }
-        throw new Error('Something went wrong');
       });
 
       await toast.promise(uploadPromise, {
         loading: 'Uploading...',
         success: 'Upload complete',
-        error: 'Upload error',
+        error: (err) => err.message || 'Upload error',
       });
     }
   }
@@ -36,12 +40,12 @@ export default function EditableImage({link, setLink}) {
       )}
       {!link && (
         <div className="text-center bg-gray-200 p-4 text-gray-500 rounded-lg mb-1">
-          No image
+          Няма снимка
         </div>
       )}
       <label>
         <input type="file" className="hidden" onChange={handleFileChange} />
-        <span className="block border border-gray-300 rounded-lg p-2 text-center cursor-pointer">Change image</span>
+        <span className="block border border-gray-300 rounded-lg p-2 text-center cursor-pointer">Промени снимка</span>
       </label>
     </>
   );

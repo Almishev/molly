@@ -58,7 +58,7 @@ export default function MenuItem(menuItem) {
           className="fixed inset-0 bg-black/80 flex items-center justify-center">
           <div
             onClick={ev => ev.stopPropagation()}
-            className="my-8 bg-white p-2 rounded-lg max-w-md">
+            className="my-8 bg-[#2d2d2d] p-4 rounded-lg max-w-md">
             <div
               className="overflow-y-scroll p-2"
               style={{maxHeight:'calc(100vh - 100px)'}}>
@@ -67,40 +67,40 @@ export default function MenuItem(menuItem) {
                 alt={name}
                 width={300} height={200}
                 className="mx-auto" />
-              <h2 className="text-lg font-bold text-center mb-2">{name}</h2>
-              <p className="text-center text-gray-500 text-sm mb-2">
+              <h2 className="text-lg font-bold text-center mb-2 text-primary">{name}</h2>
+              <p className="text-center text-gray-300 text-sm mb-2">
                 {description}
               </p>
               {sizes?.length > 0 && (
                 <div className="py-2">
-                  <h3 className="text-center text-gray-700">Pick your size</h3>
+                  <h3 className="text-center text-primary">Избери размер</h3>
                   {sizes.map(size => (
                     <label
                       key={size._id}
-                      className="flex items-center gap-2 p-4 border rounded-md mb-1">
+                      className="flex items-center gap-2 p-4 border border-gray-700 rounded-md mb-1 text-gray-200">
                       <input
                         type="radio"
                         onChange={() => setSelectedSize(size)}
                         checked={selectedSize?.name === size.name}
                         name="size"/>
-                      {size.name} ${basePrice + size.price}
+                      {size.name} {basePrice + size.price} лв
                     </label>
                   ))}
                 </div>
               )}
               {extraIngredientPrices?.length > 0 && (
                 <div className="py-2">
-                  <h3 className="text-center text-gray-700">Any extras?</h3>
+                  <h3 className="text-center text-primary">Екстри?</h3>
                   {extraIngredientPrices.map(extraThing => (
                     <label
                       key={extraThing._id}
-                      className="flex items-center gap-2 p-4 border rounded-md mb-1">
+                      className="flex items-center gap-2 p-4 border border-gray-700 rounded-md mb-1 text-gray-200">
                       <input
                         type="checkbox"
                         onChange={ev => handleExtraThingClick(ev, extraThing)}
                         checked={selectedExtras.map(e => e._id).includes(extraThing._id)}
                         name={extraThing.name} />
-                      {extraThing.name} +${extraThing.price}
+                      {extraThing.name} +{extraThing.price} лв
                     </label>
                   ))}
                 </div>
@@ -109,15 +109,15 @@ export default function MenuItem(menuItem) {
                 targetTop={'5%'}
                 targetLeft={'95%'}
                 src={image}>
-                <div className="primary sticky bottom-2"
+                <div className="bg-primary text-gray-800 font-semibold py-2 px-4 rounded-full hover:bg-[#e6cb30] transition-colors sticky bottom-2"
                      onClick={handleAddToCartButtonClick}>
-                  Add to cart ${selectedPrice}
+                  Вземи {selectedPrice} лв
                 </div>
               </FlyingButton>
               <button
-                className="mt-2"
+                className="mt-2 bg-gray-800 text-gray-200 hover:bg-gray-700 transition-colors w-full py-2 rounded-full"
                 onClick={() => setShowPopup(false)}>
-                Cancel
+                Откажи
               </button>
             </div>
           </div>

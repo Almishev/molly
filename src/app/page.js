@@ -10,25 +10,25 @@ export default function Home() {
       <HomeMenu />
       <section className="text-center my-16" id="about">
         <SectionHeaders
-          subHeader={'Our story'}
-          mainHeader={'About us'}
+          subHeader={'Нашата история'}
+          mainHeader={'За нас'}
         />
-        <div className="text-gray-500 max-w-md mx-auto mt-4 flex flex-col gap-4">
+        <div className="text-white max-w-md mx-auto mt-4 flex flex-col gap-4">
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magni minima odit recusandae. Illum ipsa non repudiandae? Eum ipsam iste quos suscipit tempora? Aperiam esse fugiat inventore laboriosam officiis quam rem!
+          Потопете се в света на "Molly", където всяко ястие е създадено с любов и страст. Нашата история започва с желанието да споделим с вас неповторими вкусове и кулинарни изживявания, които ще ви накарат да се усмихнете.
           </p>
-          <p>At consectetur delectus ducimus est facere iure molestias obcaecati quaerat vitae voluptate? Aspernatur dolor explicabo iste minus molestiae pariatur provident quibusdam saepe?</p>
-          <p>Laborum molestias neque nulla obcaecati odio quia quod reprehenderit sit vitae voluptates? Eos, tenetur.</p>
+          <p>Използваме само най-свежите и качествени продукти, за да гарантираме, че всяка хапка е истинско удоволствие. От класически гирос до иновативни кулинарни шедьоври, нашето меню е създадено, за да задоволи всеки вкус.</p>
+          <p>Присъединете се към нашето семейство и се насладете на вкусна храна, уютна атмосфера и незабравими моменти.</p>
         </div>
       </section>
       <section className="text-center my-8" id="contact">
         <SectionHeaders
-          subHeader={'Don\'t hesitate'}
-          mainHeader={'Contact us'}
+          subHeader={'Не се колебайте'}
+          mainHeader={'Свържете се с нас'}
         />
         <div className="mt-8">
-          <a className="text-4xl underline text-gray-500" href="tel:+46738123123">
-            +46 738 123 123
+          <a className="text-4xl underline text-white" href="tel:00359893071717">
+            0893071717
           </a>
         </div>
       </section>

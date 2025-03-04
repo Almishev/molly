@@ -1,16 +1,18 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+const config = {
   content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
       colors: {
-        primary: '#f13a01',
+        primary: '#FFE135', // Светло жълт цвят
+        secondary: '#4169E1', // Син цвят
+        dark: '#000000', // Черен цвят
       },
     },
   },
   plugins: [],
 }
+
+module.exports = config

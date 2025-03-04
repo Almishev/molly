@@ -40,13 +40,13 @@ export default function UserForm({user,onSave}) {
         }
       >
         <label>
-          First and last name
+          Име и фамилия
         </label>
         <input
           type="text" placeholder="First and last name"
           value={userName} onChange={ev => setUserName(ev.target.value)}
         />
-        <label>Email</label>
+        <label>Имейл</label>
         <input
           type="email"
           disabled={true}
@@ -65,11 +65,11 @@ export default function UserForm({user,onSave}) {
                 checked={admin}
                 onChange={ev => setAdmin(ev.target.checked)}
               />
-              <span>Admin</span>
+              <span>Админ</span>
             </label>
           </div>
         )}
-        <button type="submit">Save</button>
+        <button type="submit">Запази</button>
       </form>
     </div>
   );

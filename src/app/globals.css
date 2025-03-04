@@ -2,6 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary-yellow: #FFE135;
+  --primary-blue: #4169E1;
+  --accent-red: #FF3131;
+}
+
+body {
+  background-color: #1e1e1e;
+  color: white;
+}
+
+p {
+  color: white;
+}
+
+.button {
+  @apply bg-primary text-white px-4 py-2 rounded-full;
+}
+
+.button-secondary {
+  @apply bg-secondary text-white px-4 py-2 rounded-full;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply text-primary;
+}
+
+a {
+  @apply text-[#4169E1] hover:text-primary transition-colors;
+}
+
+input, textarea, select {
+  @apply bg-gray-800 border border-gray-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-[#3b82f6];
+}
+
+.card {
+  @apply bg-[#2d2d2d] border border-gray-700 rounded-lg p-4 shadow-md;
+}
+
+/* Menu item styles */
+.menu-item {
+  @apply bg-gray-800 rounded-lg overflow-hidden transition-transform hover:scale-105;
+}
+
+.menu-item img {
+  @apply w-full h-48 object-cover;
+}
+
+.menu-item h4 {
+  @apply text-primary text-xl font-semibold mt-2;
+}
+
+.menu-item p {
+  @apply text-gray-300;
+}
+
+/* Order page styles */
+.order-images img {
+  @apply rounded-lg shadow-lg max-w-[200px] h-auto;
+}
+
 section.hero{
     @apply block md:grid;
     grid-template-columns: .4fr .6fr;
@@ -13,37 +74,122 @@ input[type="password"],
 input[type="tel"],
 input[type="text"] {
     @apply block w-full mb-2 rounded-xl;
-    @apply border p-2 border-gray-300 bg-gray-100;
+    @apply border p-2 border-gray-600 bg-[#2d2d2d] text-gray-200;
 }
+
 input[type="email"]:disabled,
 input[type="password"]:disabled,
 input[type="tel"]:disabled,
 input[type="text"]:disabled {
-    @apply bg-gray-300 border-0 cursor-not-allowed text-gray-500;
+    @apply bg-[#252525] border-0 cursor-not-allowed text-gray-500;
 }
+
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus,
+input[type="text"]:focus {
+    @apply border-[#3b82f6] outline-none ring-1 ring-[#3b82f6] text-white;
+}
+
 label{
-    @apply text-gray-500 text-sm leading-tight;
+    @apply text-[#3b82f6] text-sm leading-tight mb-1 block;
 }
+
 label + input{
     margin-top: -2px;
 }
+
 button, .button{
-    @apply flex w-full justify-center gap-2 text-gray-700 font-semibold;
-    @apply border border-gray-300 rounded-xl px-6 py-2;
+    @apply flex w-full justify-center gap-2 text-white font-semibold;
+    @apply border border-gray-700 bg-gray-800 rounded-xl px-6 py-2;
 }
+
 button[type="submit"], .submit, button.primary{
-    @apply border-primary bg-primary text-white;
+    @apply border-[#3b82f6] bg-[#3b82f6] text-white;
 }
+
 button[type="submit"]:disabled, .submit:disabled{
-    @apply cursor-not-allowed bg-red-400;
+    @apply cursor-not-allowed bg-blue-400;
 }
+
 div.tabs > * {
-    @apply bg-gray-300 text-gray-700 rounded-full py-2 px-4;
+    @apply bg-gray-800 text-gray-300 rounded-full py-2 px-4;
 }
+
 div.tabs > *.active{
-    @apply bg-primary text-white;
+    @apply bg-[#3b82f6] text-white;
 }
 
 .flying-button-parent button{
-    @apply border-primary bg-primary text-white rounded-full;
+    @apply border-[#3b82f6] bg-[#3b82f6] text-white rounded-full;
+}
+
+/* Price text */
+.text-price {
+    @apply text-primary font-bold;
+}
+
+/* Subtotal and total styles */
+.order-total {
+    @apply text-gray-400;
+}
+
+.order-total .total {
+    @apply text-primary font-bold;
+}
+
+/* Form container styles */
+form, .form-container {
+  @apply bg-[#2d2d2d] rounded-2xl p-6;
+}
+
+/* Cart page specific styles */
+.cart-form {
+  @apply bg-[#2d2d2d] rounded-2xl p-6 shadow-md;
+}
+
+/* Order summary card */
+.order-summary {
+  @apply bg-[#2d2d2d] rounded-2xl p-6 border border-gray-700;
+}
+
+/* Поръчване section */
+.order-section {
+  @apply bg-[#2d2d2d] rounded-2xl p-6 mb-4;
+}
+
+.order-section h2 {
+  @apply text-primary text-2xl font-semibold mb-4;
+}
+
+/* Input container */
+.input-container {
+  @apply bg-[#1e1e1e] rounded-xl p-4 mb-4;
+}
+
+/* Navigation menu styles */
+.nav-menu {
+  @apply bg-[#2d2d2d] rounded-2xl shadow-md;
+}
+
+.nav-menu a {
+  @apply block py-2 px-4 text-[#4169E1] hover:text-primary transition-colors;
+}
+
+.nav-menu button {
+  @apply w-full bg-primary text-gray-800 font-semibold py-3 px-4 rounded-xl hover:bg-[#e6cb30] transition-colors mt-4;
+}
+
+/* Mobile menu container */
+.mobile-menu {
+  @apply bg-[#2d2d2d] rounded-2xl p-4 shadow-lg;
+}
+
+.mobile-menu-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-20 backdrop-blur-sm;
+}
+
+/* User greeting */
+.user-greeting {
+  @apply text-[#3b82f6] py-2 px-4;
 }

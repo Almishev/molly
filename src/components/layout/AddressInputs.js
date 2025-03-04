@@ -2,20 +2,22 @@ export default function AddressInputs({addressProps,setAddressProp,disabled=fals
   const {phone, streetAddress, postalCode, city, country} = addressProps;
   return (
     <>
-      <label>Phone</label>
+      <label>Телефон <span className="text-red-500">*</span></label>
       <input
         disabled={disabled}
-        type="tel" placeholder="Phone number"
-        value={phone || ''} onChange={ev => setAddressProp('phone', ev.target.value)} />
-      <label>Street address</label>
+        type="tel" placeholder="Телефон"
+        value={phone || ''} onChange={ev => setAddressProp('phone', ev.target.value)}
+        required={!disabled} />
+      <label>Улица <span className="text-red-500">*</span></label>
       <input
         disabled={disabled}
-        type="text" placeholder="Street address"
+        type="text" placeholder="Улица №, Блок"
         value={streetAddress || ''} onChange={ev => setAddressProp('streetAddress', ev.target.value)}
+        required={!disabled}
       />
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <label>Postal code</label>
+          <label>Пощенски код</label>
           <input
             disabled={disabled}
             type="text" placeholder="Postal code"
@@ -23,18 +25,19 @@ export default function AddressInputs({addressProps,setAddressProp,disabled=fals
           />
         </div>
         <div>
-          <label>City</label>
+          <label>Град <span className="text-red-500">*</span></label>
           <input
             disabled={disabled}
-            type="text" placeholder="City"
+            type="text" placeholder="Град/Село"
             value={city || ''} onChange={ev => setAddressProp('city', ev.target.value)}
+            required={!disabled}
           />
         </div>
       </div>
-      <label>Country</label>
+      <label>Държава</label>
       <input
         disabled={disabled}
-        type="text" placeholder="Country"
+        type="text" placeholder="Държава"
         value={country || ''} onChange={ev => setAddressProp('country', ev.target.value)}
       />
     </>

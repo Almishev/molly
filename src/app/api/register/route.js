@@ -4,16 +4,27 @@ import mongoose from "mongoose";
 
 export async function POST(req) {
   const body = await req.json();
-  mongoose.connect(process.env.MONGO_URL);
+  mongoose.connect(process.env.MONGODB_URI);
   const pass = body.password;
   if (!pass?.length || pass.length < 5) {
-    new Error('password must be at least 5 characters');
+    return Response.json({error: 'password must be at least 5 characters'}, {status: 400});
   }
 
-  const notHashedPassword = pass;
-  const salt = bcrypt.genSaltSync(10);
-  body.password = bcrypt.hashSync(notHashedPassword, salt);
+  const email = body.email;
+  if (!email?.includes('@')) {
+    return Response.json({error: 'invalid email'}, {status: 400});
+  }
 
-  const createdUser = await User.create(body);
-  return Response.json(createdUser);
+  try {
+    const notHashedPassword = pass;
+    const salt = bcrypt.genSaltSync(10);
+    body.password = bcrypt.hashSync(notHashedPassword, salt);
+
+    const createdUser = await User.create(body);
+    console.log('User created:', createdUser);
+    return Response.json(createdUser);
+  } catch (error) {
+    console.error('Error creating user:', error);
+    return Response.json({error: 'error creating user'}, {status: 400});
+  }
 }
