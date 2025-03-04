@@ -9,9 +9,9 @@ export async function POST(req) {
     // Log environment variables (without sensitive data)
     console.log('AWS Config:', {
       region: 'eu-central-1',
-      hasAccessKey: !!process.env.AWS_ACCESS_KEY,
-      hasSecretKey: !!process.env.AWS_SECRET_KEY,
-      secretKeyLength: process.env.AWS_SECRET_KEY?.length,
+      hasAccessKey: !!process.env.MY_AWS_ACCESS_KEY,
+      hasSecretKey: !!process.env.MY_AWS_SECRET_KEY,
+      secretKeyLength: process.env.MY_AWS_SECRET_KEY?.length,
     });
 
     const bucket = process.env.AWS_BUCKET || 'food-ordering-images-anton-almishev';
@@ -21,8 +21,8 @@ export async function POST(req) {
       region: 'eu-central-1',
       endpoint: `https://s3.eu-central-1.amazonaws.com`,
       credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY,
-        secretAccessKey: process.env.AWS_SECRET_KEY,
+        accessKeyId: process.env.MY_AWS_ACCESS_KEY,
+        secretAccessKey: process.env.MY_AWS_SECRET_KEY,
       },
     });
 
