@@ -7,28 +7,31 @@ import toast from "react-hot-toast";
 
 export default function MenuItem(menuItem) {
   const {
-    image,name,description,basePrice,
-    sizes, extraIngredientPrices,
+    image, name, description, basePrice,
+    sizes, extraIngredientPrices, _id
   } = menuItem;
-  const [
-    selectedSize, setSelectedSize
-  ] = useState(sizes?.[0] || null);
+  const [selectedSize, setSelectedSize] = useState(sizes?.[0] || null);
   const [selectedExtras, setSelectedExtras] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const {addToCart} = useContext(CartContext);
 
+  // Check if the item has sizes or extras
+  const hasSizesOrExtras = (sizes && sizes.length > 0) || (extraIngredientPrices && extraIngredientPrices.length > 0);
+
   async function handleAddToCartButtonClick() {
     console.log('add to cart');
-    const hasOptions = sizes.length > 0 || extraIngredientPrices.length > 0;
+    const hasOptions = sizes?.length > 0 || extraIngredientPrices?.length > 0;
     if (hasOptions && !showPopup) {
       setShowPopup(true);
       return;
     }
     addToCart(menuItem, selectedSize, selectedExtras);
+    toast.success('Добавено в кошницата!');
     await new Promise(resolve => setTimeout(resolve, 1000));
     console.log('hiding popup');
     setShowPopup(false);
   }
+
   function handleExtraThingClick(ev, extraThing) {
     const checked = ev.target.checked;
     if (checked) {
@@ -52,6 +55,9 @@ export default function MenuItem(menuItem) {
   // Закръгляне до втория знак след десетичната запетая
   selectedPrice = parseFloat(selectedPrice.toFixed(2));
 
+  // Common button style
+  const buttonStyle = "bg-yellow-500 hover:bg-yellow-300 text-black py-2 px-4 rounded-full transition-colors";
+
   return (
     <>
       {showPopup && (
@@ -69,13 +75,13 @@ export default function MenuItem(menuItem) {
                 alt={name}
                 width={300} height={200}
                 className="mx-auto" />
-              <h2 className="text-lg font-bold text-center mb-2 text-primary">{name}</h2>
+              <h2 className="text-lg font-bold text-center mb-2 text-yellow-500">{name}</h2>
               <p className="text-center text-gray-300 text-sm mb-2">
                 {description}
               </p>
               {sizes?.length > 0 && (
                 <div className="py-2">
-                  <h3 className="text-center text-primary">Избери размер</h3>
+                  <h3 className="text-center text-yellow-500">Избери размер</h3>
                   {sizes.map(size => (
                     <label
                       key={size._id}
@@ -92,7 +98,7 @@ export default function MenuItem(menuItem) {
               )}
               {extraIngredientPrices?.length > 0 && (
                 <div className="py-2">
-                  <h3 className="text-center text-primary">Екстри?</h3>
+                  <h3 className="text-center text-yellow-500">Екстри?</h3>
                   {extraIngredientPrices.map(extraThing => (
                     <label
                       key={extraThing._id}
@@ -111,9 +117,9 @@ export default function MenuItem(menuItem) {
                 targetTop={'5%'}
                 targetLeft={'95%'}
                 src={image}>
-                <div className="bg-primary text-gray-800 font-semibold py-2 px-4 rounded-full hover:bg-[#e6cb30] transition-colors sticky bottom-2"
+                <div className="bg-yellow-500 hover:bg-yellow-300 text-black font-semibold py-2 px-4 rounded-full transition-colors sticky bottom-2"
                      onClick={handleAddToCartButtonClick}>
-                  Вземи {selectedPrice.toFixed(2)} лв
+                  Вземи за {selectedPrice.toFixed(2)} лв
                 </div>
               </FlyingButton>
               <button

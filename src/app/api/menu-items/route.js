@@ -25,7 +25,7 @@ export async function PUT(req) {
 export async function GET() {
   mongoose.connect(process.env.MONGODB_URI);
   return Response.json(
-    await MenuItem.find()
+    await MenuItem.find().sort({category: 1})
   );
 }
 

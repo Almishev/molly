@@ -4,9 +4,9 @@ import mongoose from "mongoose";
 
 export async function POST(req) {
   mongoose.connect(process.env.MONGODB_URI);
-  const {name} = await req.json();
+  const {name, order} = await req.json();
   if (await isAdmin()) {
-    const categoryDoc = await Category.create({name});
+    const categoryDoc = await Category.create({name, order});
     return Response.json(categoryDoc);
   } else {
     return Response.json({});
@@ -15,17 +15,18 @@ export async function POST(req) {
 
 export async function PUT(req) {
   mongoose.connect(process.env.MONGODB_URI);
-  const {_id, name} = await req.json();
+  const {_id, name, order} = await req.json();
   if (await isAdmin()) {
-    await Category.updateOne({_id}, {name});
+    await Category.updateOne({_id}, {name, order});
   }
   return Response.json(true);
 }
 
 export async function GET() {
   mongoose.connect(process.env.MONGODB_URI);
+  // Sort first by order, then by name for categories with the same order
   return Response.json(
-    await Category.find()
+    await Category.find().sort({order: 1, name: 1})
   );
 }
 

@@ -28,7 +28,7 @@ export default function AddToCartButton({
             type="button"
             onClick={onClick} 
             className={buttonStyle}>
-            Вземи за ({basePrice.toFixed(2)} лв) 
+            Вземи за {basePrice.toFixed(2)} лв
           </button>
         </FlyingButton>
       </div>

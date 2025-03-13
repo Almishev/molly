@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 export default function CategoriesPage() {
 
   const [categoryName, setCategoryName] = useState('');
+  const [categoryOrder, setCategoryOrder] = useState(0);
   const [categories, setCategories] = useState([]);
   const {loading:profileLoading, data:profileData} = useProfile();
   const [editedCategory, setEditedCategory] = useState(null);
@@ -27,7 +28,10 @@ export default function CategoriesPage() {
   async function handleCategorySubmit(ev) {
     ev.preventDefault();
     const creationPromise = new Promise(async (resolve, reject) => {
-      const data = {name:categoryName};
+      const data = {
+        name: categoryName,
+        order: categoryOrder,
+      };
       if (editedCategory) {
         data._id = editedCategory._id;
       }
@@ -37,6 +41,7 @@ export default function CategoriesPage() {
         body: JSON.stringify(data),
       });
       setCategoryName('');
+      setCategoryOrder(0);
       fetchCategories();
       setEditedCategory(null);
       if (response.ok)
@@ -97,6 +102,15 @@ export default function CategoriesPage() {
             <input type="text"
                    value={categoryName}
                    onChange={ev => setCategoryName(ev.target.value)}
+                   placeholder="Име на категория"
+            />
+          </div>
+          <div className="w-24">
+            <label>Ред</label>
+            <input type="number"
+                   value={categoryOrder}
+                   onChange={ev => setCategoryOrder(Number(ev.target.value))}
+                   placeholder="Ред"
             />
           </div>
           <div className="pb-2 flex gap-2">
@@ -108,6 +122,7 @@ export default function CategoriesPage() {
               onClick={() => {
                 setEditedCategory(null);
                 setCategoryName('');
+                setCategoryOrder(0);
               }}>
               Изход
             </button>
@@ -116,6 +131,11 @@ export default function CategoriesPage() {
       </form>
       <div>
         <h2 className="mt-8 text-sm text-gray-200">Съществуващи категории</h2>
+        <div className="text-sm text-gray-400 mb-2">
+          Категориите се показват в реда на тяхното число в полето "Ред" (от най-малкото към най-голямото).
+          <br />
+          Препоръчителен ред: 1-Гироси, 2-Бургери, 3-Порции, 4-Салати, 5-Десерти, 6-Напитки
+        </div>
         {categories?.length > 0 && categories.map(c => (
           <div
             key={c._id}
@@ -123,11 +143,15 @@ export default function CategoriesPage() {
             <div className="grow text-gray-100">
               {c.name}
             </div>
+            <div className="text-gray-400 mr-4">
+              Ред: {c.order || 0}
+            </div>
             <div className="flex gap-1">
               <button type="button"
                       onClick={() => {
                         setEditedCategory(c);
                         setCategoryName(c.name);
+                        setCategoryOrder(c.order || 0);
                       }}
               >
                 Редактирай
@@ -138,6 +162,12 @@ export default function CategoriesPage() {
             </div>
           </div>
         ))}
+      </div>
+      
+      <div className="mt-8">
+        <a href="/update-categories" className="bg-yellow-500 text-black py-2 px-4 rounded-full hover:bg-yellow-400 transition-colors inline-block">
+          Обнови реда на категориите
+        </a>
       </div>
     </section>
   );

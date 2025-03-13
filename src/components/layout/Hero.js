@@ -30,10 +30,10 @@ export default function Hero() {
       </div>
       <div className="relative hidden md:block">
         <Image 
-          src={'/pizza.png'} 
+          src={'/giros.jpg'} 
           fill={true}
           className="object-contain"
-          alt={'pizza'} 
+          alt={'giros'} 
         />
       </div>
     </section>

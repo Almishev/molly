@@ -189,3 +189,40 @@ form, .form-container {
 .user-greeting {
   @apply text-[#3b82f6] py-2 px-4;
 }
+
+/* Category navigation styles */
+.category-section {
+  scroll-margin-top: 5rem;
+}
+
+/* Category header styles */
+.category-header {
+  @apply flex justify-between items-center p-4 bg-[#2d2d2d] rounded-lg cursor-pointer mb-2;
+}
+
+.category-header h2 {
+  @apply text-xl font-bold text-yellow-500;
+}
+
+.category-toggle-button {
+  @apply text-white bg-transparent border-0 text-xl transition-transform duration-300 ease-in-out;
+}
+
+/* Override flying button styles to remove blue background */
+.flying-button-parent button,
+.flying-button-parent > div {
+  @apply bg-transparent border-0 shadow-none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* Style for the flying button inner content */
+.flying-button-parent > div > div {
+  @apply inline-block w-full;
+}
+
+/* Премахваме подчертаването на линковете в категориите */
+.no-underline {
+  text-decoration: none;
+  color: inherit;
+}
