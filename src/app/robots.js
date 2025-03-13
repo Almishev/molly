@@ -3,19 +3,8 @@ export default function robots() {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: [
-        '/api/',
-        '/admin/',
-        '/private/',
-        '/_next/',
-        '/checkout/',
-        '/menu-items/edit/',
-        '/menu-items/delete/',
-        '/categories/edit/',
-        '/users/edit/',
-      ],
+      disallow: ['/api/', '/admin/'],
     },
     sitemap: 'https://molly-food-ordering.vercel.app/sitemap.xml',
-    host: 'https://molly-food-ordering.vercel.app',
-  };
+  }
 } 

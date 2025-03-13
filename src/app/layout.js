@@ -1,28 +1,34 @@
 import { Roboto } from 'next/font/google'
 import './globals.css'
 import ClientLayout from '@/components/layout/ClientLayout';
+import Script from 'next/script';
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['400', '500', '700'] })
 
 export const metadata = {
   title: {
-    default: 'Molly Food Ordering - Вкусна храна за всеки',
-    template: '%s | Molly Food Ordering'
+    default: 'Molly - Гироси и Дюнери | Доставка на храна в Гоце Делчев',
+    template: '%s | Molly Food'
   },
-  description: 'Molly Food Ordering - Поръчайте вкусна храна онлайн с бърза доставка до вашия дом или офис.',
-  keywords: ['храна', 'доставка', 'пица', 'бургери', 'гирос', 'онлайн поръчка', 'molly', 'ресторант'],
+  description: 'Вкусни гироси и дюнери в София, Благоевград и Гоце Делчев. Бърза доставка на храна за вкъщи в град Гоце Делчев. Прясно приготвена храна от качествени продукти.',
+  keywords: [
+    'гирос', 'дюнер', 'храна за вкъщи', 'доставка на храна',
+    'ресторант Гоце Делчев', 'храна Гоце Делчев', 'гирос София',
+    'дюнер Благоевград', 'бърза храна', 'гръцка кухня',
+    'доставка храна Гоце Делчев', 'ресторант', 'molly food'
+  ],
   metadataBase: new URL('https://molly-food-ordering.vercel.app'),
   openGraph: {
-    title: 'Molly Food Ordering - Вкусна храна за всеки',
-    description: 'Поръчайте вкусна храна онлайн с бърза доставка до вашия дом или офис.',
+    title: 'Molly - Гироси и Дюнери | Доставка на храна',
+    description: 'Вкусни гироси и дюнери в София, Благоевград и Гоце Делчев. Бърза доставка на храна за вкъщи в град Гоце Делчев.',
     url: 'https://molly-food-ordering.vercel.app',
-    siteName: 'Molly Food Ordering',
+    siteName: 'Molly Food',
     images: [
       {
-        url: 'https://molly-food-ordering.vercel.app/logo.png',
-        width: 800,
-        height: 600,
-        alt: 'Molly Food Ordering Logo',
+        url: 'https://molly-food-ordering.vercel.app/meal.png',
+        width: 512,
+        height: 512,
+        alt: 'Molly Food - Вкусна храна с доставка',
       }
     ],
     locale: 'bg_BG',
@@ -40,24 +46,224 @@ export const metadata = {
     },
   },
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/apple-icon.png',
+    icon: '/meal.png',
+    shortcut: '/meal.png',
+    apple: '/meal.png',
+    other: [
+      {
+        rel: 'apple-touch-icon',
+        url: '/meal.png',
+      },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '32x32',
+        url: '/meal.png',
+      },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '16x16',
+        url: '/meal.png',
+      }
+    ]
   },
   verification: {
     google: 'google-site-verification-code', // Заменете с вашия код, когато го имате
   },
+  alternates: {
+    canonical: 'https://molly-food-ordering.vercel.app'
+  }
 }
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="bg" className="scroll-smooth">
+      <head>
+        <Script
+          id="schema-restaurant"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Restaurant",
+              "name": "Molly Food",
+              "image": "https://molly-food-ordering.vercel.app/meal.png",
+              "url": "https://molly-food-ordering.vercel.app",
+              "telephone": "+359893071717",
+              "servesCuisine": ["Гръцка кухня", "Бърза храна", "Гироси", "Дюнери"],
+              "priceRange": "$$",
+              "openingHoursSpecification": {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                  "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+                ],
+                "opens": "10:00",
+                "closes": "22:00"
+              },
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Гоце Делчев",
+                "addressCountry": "BG"
+              },
+              "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "Меню",
+                "itemListElement": [
+                  {
+                    "@type": "OfferCatalog",
+                    "name": "Гироси",
+                    "itemListElement": [
+                      {
+                        "@type": "Offer",
+                        "itemOffered": {
+                          "@type": "MenuItem",
+                          "name": "Гирос"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "@type": "OfferCatalog",
+                    "name": "Дюнери",
+                    "itemListElement": [
+                      {
+                        "@type": "Offer",
+                        "itemOffered": {
+                          "@type": "MenuItem",
+                          "name": "Дюнер"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            })
+          }}
+        />
+        <Script
+          id="schema-local-business"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "LocalBusiness",
+                "name": "Molly Food София",
+                "image": "https://molly-food-ordering.vercel.app/meal.png",
+                "url": "https://molly-food-ordering.vercel.app",
+                "telephone": "+359893071717",
+                "priceRange": "$$",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "София",
+                  "addressCountry": "BG"
+                },
+                "openingHoursSpecification": {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+                  ],
+                  "opens": "10:00",
+                  "closes": "22:00"
+                }
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "LocalBusiness",
+                "name": "Molly Food Благоевград",
+                "image": "https://molly-food-ordering.vercel.app/meal.png",
+                "url": "https://molly-food-ordering.vercel.app",
+                "telephone": "+359893071717",
+                "priceRange": "$$",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Благоевград",
+                  "addressCountry": "BG"
+                },
+                "openingHoursSpecification": {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+                  ],
+                  "opens": "10:00",
+                  "closes": "22:00"
+                }
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "LocalBusiness",
+                "name": "Molly Food Гоце Делчев",
+                "image": "https://molly-food-ordering.vercel.app/meal.png",
+                "url": "https://molly-food-ordering.vercel.app",
+                "telephone": "+359893071717",
+                "priceRange": "$$",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Гоце Делчев",
+                  "addressCountry": "BG"
+                },
+                "openingHoursSpecification": {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+                  ],
+                  "opens": "10:00",
+                  "closes": "22:00"
+                },
+                "hasOfferCatalog": {
+                  "@type": "OfferCatalog",
+                  "name": "Доставка на храна",
+                  "itemListElement": [
+                    {
+                      "@type": "Offer",
+                      "itemOffered": {
+                        "@type": "Service",
+                        "name": "Доставка на храна за вкъщи"
+                      }
+                    }
+                  ]
+                }
+              }
+            ])
+          }}
+        />
+      </head>
       <body className={roboto.className}>
         <main className="max-w-4xl mx-auto p-4">
           <ClientLayout>
             {children}
-            <footer className="border-t p-8 text-center text-gray-200 mt-16">
-              &copy; {new Date().getFullYear()} Всички права запазени
+            <footer className="border-t p-8 text-center mt-16">
+              <div className="grid md:grid-cols-3 gap-8 text-gray-200">
+                <div className="flex flex-col items-center md:items-start">
+                  <h3 className="text-lg font-semibold mb-4 text-yellow-400">Molly <span className="text-blue-600">GYROS</span></h3>
+                  <p className="text-sm mb-2">Гръцки гироси и бургери</p>
+                  <p className="text-sm mb-2">Доставка на храна в Гоце Делчев</p>
+                  <p className="text-sm">Работно време: 10:00 - 22:00</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <h3 className="text-lg font-semibold mb-4 text-yellow-400">Нашите обекти</h3>
+                  <p className="text-sm mb-2">София</p>
+                  <p className="text-sm mb-2">Благоевград</p>
+                  <p className="text-sm">Гоце Делчев</p>
+                </div>
+                <div className="flex flex-col items-center md:items-end">
+                  <h3 className="text-lg font-semibold mb-4 text-yellow-400">Контакти</h3>
+                  <a href="tel:00359893071717" className="text-sm mb-2 hover:text-yellow-400 transition-colors">0893071717</a>
+                  <a href="viber://chat?number=%2B359893071717" className="text-sm mb-2 hover:text-yellow-400 transition-colors">Viber</a>
+                  <a href="https://www.facebook.com/molly.food" target="_blank" rel="noopener noreferrer" className="text-sm hover:text-yellow-400 transition-colors">Facebook</a>
+                </div>
+              </div>
+              <div className="mt-8 text-sm text-gray-400">
+                <p>&copy; {new Date().getFullYear()} Molly GYROS. Всички права запазени.</p>
+                <div className="mt-2 flex justify-center gap-4">
+                  <a href="/menu" className="hover:text-yellow-400 transition-colors">Меню</a>
+                  <span>|</span>
+                  <a href="/#about" className="hover:text-yellow-400 transition-colors">За нас</a>
+                  <span>|</span>
+                  <a href="/#contact" className="hover:text-yellow-400 transition-colors">Контакти</a>
+                </div>
+              </div>
             </footer>
           </ClientLayout>
         </main>
