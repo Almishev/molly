@@ -25,7 +25,7 @@ export const metadata = {
     siteName: 'Molly Food',
     images: [
       {
-        url: '/meal.png',
+        url: 'https://food-delivery-app-molly.vercel.app/meal.png',
         width: 512,
         height: 512,
         alt: 'Molly Food - Вкусна храна с доставка',
@@ -38,7 +38,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Molly - Гироси и Бургери | Доставка на храна',
     description: 'Вкусни гироси и бургери в София, Благоевград и Гоце Делчев. Бърза доставка на храна за вкъщи в град Гоце Делчев.',
-    images: ['/meal.png'],
+    images: ['https://food-delivery-app-molly.vercel.app/meal.png'],
   },
   robots: {
     index: true,
@@ -78,7 +78,7 @@ export const metadata = {
     google: 'google-site-verification-code', // Заменете с вашия код, когато го имате
   },
   alternates: {
-    canonical: 'https://molly-food-ordering.vercel.app'
+    canonical: 'https://food-delivery-app-molly.vercel.app'
   }
 }
 
