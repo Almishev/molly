@@ -81,7 +81,13 @@ export default function LoginPage() {
         <button type="button" 
           onClick={() => {
             console.log('Започва вход с Facebook...');
-            signIn('facebook', {callbackUrl: '/'});
+            signIn('facebook', {
+              callbackUrl: '/',
+              redirect: true,
+            }).catch(error => {
+              console.error('Facebook login error:', error);
+              toast.error('Грешка при вход с Facebook');
+            });
           }}
           className="flex gap-4 justify-center mt-2">
           <Image src={'/facebook.png'} alt={''} width={24} height={24} />

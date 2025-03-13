@@ -49,6 +49,8 @@ export default function MenuItem(menuItem) {
       selectedPrice += extra.price;
     }
   }
+  // Закръгляне до втория знак след десетичната запетая
+  selectedPrice = parseFloat(selectedPrice.toFixed(2));
 
   return (
     <>
@@ -83,7 +85,7 @@ export default function MenuItem(menuItem) {
                         onChange={() => setSelectedSize(size)}
                         checked={selectedSize?.name === size.name}
                         name="size"/>
-                      {size.name} {basePrice + size.price} лв
+                      {size.name} {(basePrice + size.price).toFixed(2)} лв
                     </label>
                   ))}
                 </div>
@@ -100,7 +102,7 @@ export default function MenuItem(menuItem) {
                         onChange={ev => handleExtraThingClick(ev, extraThing)}
                         checked={selectedExtras.map(e => e._id).includes(extraThing._id)}
                         name={extraThing.name} />
-                      {extraThing.name} +{extraThing.price} лв
+                      {extraThing.name} +{extraThing.price.toFixed(2)} лв
                     </label>
                   ))}
                 </div>
@@ -111,7 +113,7 @@ export default function MenuItem(menuItem) {
                 src={image}>
                 <div className="bg-primary text-gray-800 font-semibold py-2 px-4 rounded-full hover:bg-[#e6cb30] transition-colors sticky bottom-2"
                      onClick={handleAddToCartButtonClick}>
-                  Вземи {selectedPrice} лв
+                  Вземи {selectedPrice.toFixed(2)} лв
                 </div>
               </FlyingButton>
               <button

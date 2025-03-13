@@ -39,6 +39,9 @@ export async function POST(req) {
       }
     }
 
+    // Закръгляне до втория знак след десетичната запетая
+    productPrice = parseFloat(productPrice.toFixed(2));
+
     const productName = cartProduct.name;
 
     stripeLineItems.push({
@@ -48,7 +51,7 @@ export async function POST(req) {
         product_data: {
           name: productName,
         },
-        unit_amount: productPrice * 100,
+        unit_amount: Math.round(productPrice * 100), // Умножаваме по 100 за центове и закръгляме
       },
     });
   }

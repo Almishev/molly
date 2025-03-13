@@ -26,7 +26,7 @@ export default function CartProduct({product,onRemove,index}) {
         )}
       </div>
       <div className="text-lg font-semibold">
-        {cartProductPrice(product)} лв
+        {cartProductPrice(product).toFixed(2)} лв
       </div>
       {!!onRemove && (
         <div className="ml-2">

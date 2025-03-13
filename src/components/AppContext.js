@@ -15,7 +15,7 @@ export function cartProductPrice(cartProduct) {
       price += extra.price;
     }
   }
-  return price;
+  return parseFloat(price.toFixed(2));
 }
 
 export function AppProvider({children}) {

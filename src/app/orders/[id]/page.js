@@ -34,6 +34,10 @@ export default function OrderPage() {
       subtotal += cartProductPrice(product);
     }
   }
+  // Закръгляне на общата сума до втория знак след десетичната запетая
+  subtotal = parseFloat(subtotal.toFixed(2));
+  const deliveryFee = 1;
+  const total = parseFloat((subtotal + deliveryFee).toFixed(2));
 
   return (
     <section className="max-w-2xl mx-auto mt-8">
@@ -56,16 +60,16 @@ export default function OrderPage() {
             <div className="text-right py-4 px-2 bg-black rounded-lg mt-4">
               <div className="flex justify-between mb-2">
                 <span className="text-gray-300">Междинна сума:</span>
-                <span className="text-white font-bold">{subtotal} лв</span>
+                <span className="text-white font-bold">{subtotal.toFixed(2)} лв</span>
               </div>
               <div className="flex justify-between mb-2">
                 <span className="text-gray-300">Доставка:</span>
-                <span className="text-white font-bold">1 лв</span>
+                <span className="text-white font-bold">1.00 лв</span>
               </div>
               <div className="flex justify-between border-t border-gray-700 pt-2 mt-2">
                 <span className="text-gray-300 font-semibold">Общо:</span>
                 <span className="text-white font-bold text-lg">
-                  {subtotal + 1} лв
+                  {total.toFixed(2)} лв
                 </span>
               </div>
             </div>

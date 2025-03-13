@@ -17,7 +17,9 @@ export const authOptions = {
   },
   pages: {
     signIn: '/login',
+    error: '/login',
   },
+  debug: true,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -32,7 +34,15 @@ export const authOptions = {
           response_type: "code",
         },
       },
-
+      profile(profile) {
+        console.log("Facebook profile:", profile);
+        return {
+          id: profile.id,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture?.data?.url,
+        };
+      },
     }),
     CredentialsProvider({
       name: 'Credentials',

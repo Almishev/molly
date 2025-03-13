@@ -56,7 +56,9 @@ export async function sendOrderNotification(order) {
       
       subtotal += productPrice * (product.quantity || 1);
     }
-    const total = subtotal + 1; // 1 лв за доставка
+    // Закръгляне до втория знак след десетичната запетая
+    subtotal = parseFloat(subtotal.toFixed(2));
+    const total = parseFloat((subtotal + 1).toFixed(2)); // 1 лв за доставка
     
     // Информация за адреса
     const addressInfo = `
@@ -89,9 +91,9 @@ export async function sendOrderNotification(order) {
             ${productsHtml}
             
             <div style="text-align: right; margin-top: 15px;">
-              <p><strong>Междинна сума:</strong> ${subtotal} лв</p>
-              <p><strong>Доставка:</strong> 1 лв</p>
-              <p style="font-size: 18px;"><strong>Общо:</strong> ${total} лв</p>
+              <p><strong>Междинна сума:</strong> ${subtotal.toFixed(2)} лв</p>
+              <p><strong>Доставка:</strong> 1.00 лв</p>
+              <p style="font-size: 18px;"><strong>Общо:</strong> ${total.toFixed(2)} лв</p>
             </div>
           </div>
           
