@@ -32,6 +32,12 @@ export default function UserTabs({isAdmin}) {
           >
             Потребители
           </Link>
+          <Link
+            className={path === '/settings' ? 'active' : ''}
+            href={'/settings'}
+          >
+            Доставка
+          </Link>
         </>
       )}
       <Link

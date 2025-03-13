@@ -3,6 +3,7 @@ import {CartContext, cartProductPrice} from "@/components/AppContext";
 import AddressInputs from "@/components/layout/AddressInputs";
 import SectionHeaders from "@/components/layout/SectionHeaders";
 import CartProduct from "@/components/menu/CartProduct";
+import {useSettings} from "@/components/UseSettings";
 import {useParams} from "next/navigation";
 import {useContext, useEffect, useState} from "react";
 
@@ -11,6 +12,8 @@ export default function OrderPage() {
   const [order, setOrder] = useState();
   const [loadingOrder, setLoadingOrder] = useState(true);
   const {id} = useParams();
+  const {calculateDeliveryFee} = useSettings();
+  
   useEffect(() => {
     if (typeof window.console !== "undefined") {
       if (window.location.href.includes('clear-cart=1')) {
@@ -36,7 +39,9 @@ export default function OrderPage() {
   }
   // Закръгляне на общата сума до втория знак след десетичната запетая
   subtotal = parseFloat(subtotal.toFixed(2));
-  const deliveryFee = 1;
+  
+  // Използване на доставката от поръчката, ако е налична, или изчисляване с хука
+  const deliveryFee = order?.deliveryFee !== undefined ? order.deliveryFee : calculateDeliveryFee(subtotal);
   const total = parseFloat((subtotal + deliveryFee).toFixed(2));
 
   return (
@@ -64,8 +69,13 @@ export default function OrderPage() {
               </div>
               <div className="flex justify-between mb-2">
                 <span className="text-gray-300">Доставка:</span>
-                <span className="text-white font-bold">1.00 лв</span>
+                <span className="text-white font-bold">{deliveryFee.toFixed(2)} лв</span>
               </div>
+              {deliveryFee === 0 && (
+                <div className="text-center text-green-500 text-sm mb-2">
+                  Безплатна доставка! 🎉
+                </div>
+              )}
               <div className="flex justify-between border-t border-gray-700 pt-2 mt-2">
                 <span className="text-gray-300 font-semibold">Общо:</span>
                 <span className="text-white font-bold text-lg">

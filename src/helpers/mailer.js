@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import { cartProductPrice } from '@/components/AppContext';
+import { Settings } from '@/models/Settings';
 
 // Конфигурация на транспортера за изпращане на имейли
 const transporter = nodemailer.createTransport({
@@ -11,6 +12,28 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS || 'ylnppaqssnyjftcc',
   },
 });
+
+// Функция за изчисляване на такса за доставка въз основа на настройките
+async function calculateDeliveryFee(subtotal) {
+  try {
+    // Получаване на настройките от базата данни
+    const deliveryFeeSetting = await Settings.findOne({ name: 'deliveryFee' });
+    const thresholdSetting = await Settings.findOne({ name: 'freeDeliveryThreshold' });
+    
+    const deliveryFee = deliveryFeeSetting ? deliveryFeeSetting.value : 1;
+    const freeDeliveryThreshold = thresholdSetting ? thresholdSetting.value : 0;
+    
+    // Ако сумата е над прага за безплатна доставка и прагът е по-голям от 0
+    if (freeDeliveryThreshold > 0 && subtotal >= freeDeliveryThreshold) {
+      return 0;
+    }
+    
+    return deliveryFee;
+  } catch (error) {
+    console.error('Error calculating delivery fee:', error);
+    return 1; // Връщане на стандартна такса за доставка при грешка
+  }
+}
 
 /**
  * Изпраща имейл за нова поръчка
@@ -58,7 +81,10 @@ export async function sendOrderNotification(order) {
     }
     // Закръгляне до втория знак след десетичната запетая
     subtotal = parseFloat(subtotal.toFixed(2));
-    const total = parseFloat((subtotal + 1).toFixed(2)); // 1 лв за доставка
+    
+    // Изчисляване на такса за доставка въз основа на настройките
+    const deliveryFee = order.deliveryFee !== undefined ? order.deliveryFee : await calculateDeliveryFee(subtotal);
+    const total = parseFloat((subtotal + deliveryFee).toFixed(2));
     
     // Информация за адреса
     const addressInfo = `
@@ -92,7 +118,8 @@ export async function sendOrderNotification(order) {
             
             <div style="text-align: right; margin-top: 15px;">
               <p><strong>Междинна сума:</strong> ${subtotal.toFixed(2)} лв</p>
-              <p><strong>Доставка:</strong> 1.00 лв</p>
+              <p><strong>Доставка:</strong> ${deliveryFee.toFixed(2)} лв</p>
+              ${deliveryFee === 0 ? '<p style="color: green;"><strong>Безплатна доставка!</strong></p>' : ''}
               <p style="font-size: 18px;"><strong>Общо:</strong> ${total.toFixed(2)} лв</p>
             </div>
           </div>

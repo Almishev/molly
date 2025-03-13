@@ -15,12 +15,14 @@ export default function MenuItemTile({onAddToCart, ...item}) {
       <p className="text-gray-300 text-sm line-clamp-3">
         {description}
       </p>
-      <AddToCartButton
-        image={image}
-        hasSizesOrExtras={hasSizesOrExtras}
-        onClick={onAddToCart}
-        basePrice={basePrice}
-      />
+      <div className="mt-4">
+        <AddToCartButton
+          image={image}
+          hasSizesOrExtras={hasSizesOrExtras}
+          onClick={onAddToCart}
+          basePrice={basePrice}
+        />
+      </div>
     </div>
   );
 }

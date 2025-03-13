@@ -5,6 +5,7 @@ import AddressInputs from "@/components/layout/AddressInputs";
 import SectionHeaders from "@/components/layout/SectionHeaders";
 import CartProduct from "@/components/menu/CartProduct";
 import {useProfile} from "@/components/UseProfile";
+import {useSettings} from "@/components/UseSettings";
 import Image from "next/image";
 import {useContext, useEffect, useState} from "react";
 import toast from "react-hot-toast";
@@ -13,6 +14,7 @@ export default function CartPage() {
   const {cartProducts,removeCartProduct} = useContext(CartContext);
   const [address, setAddress] = useState({});
   const {data:profileData} = useProfile();
+  const {calculateDeliveryFee, loading: loadingSettings} = useSettings();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -42,7 +44,9 @@ export default function CartPage() {
   }
   // Закръгляне на общата сума до втория знак след десетичната запетая
   subtotal = parseFloat(subtotal.toFixed(2));
-  const deliveryFee = 1;
+  
+  // Изчисляване на такса за доставка въз основа на настройките
+  const deliveryFee = calculateDeliveryFee(subtotal);
   const total = parseFloat((subtotal + deliveryFee).toFixed(2));
   
   function handleAddressChange(propName, value) {
@@ -156,8 +160,13 @@ export default function CartPage() {
             </div>
             <div className="flex justify-between mb-2">
               <span className="text-gray-300">Доставка:</span>
-              <span className="text-white font-bold">1.00 лв</span>
+              <span className="text-white font-bold">{deliveryFee.toFixed(2)} лв</span>
             </div>
+            {deliveryFee === 0 && (
+              <div className="text-center text-green-500 text-sm mb-2">
+                Безплатна доставка! 🎉
+              </div>
+            )}
             <div className="flex justify-between border-t border-gray-700 pt-2 mt-2">
               <span className="text-gray-300 font-semibold">Общо:</span>
               <span className="text-white font-bold text-lg">

@@ -10,6 +10,7 @@ const OrderSchema = new Schema({
   cartProducts: Object,
   paid: {type: Boolean, default: false},
   bulgarianTime: String,
+  deliveryFee: {type: Number, default: 1},
 }, {
   timestamps: true,
   timezones: {

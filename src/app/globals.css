@@ -120,10 +120,6 @@ div.tabs > *.active{
     @apply bg-[#3b82f6] text-white;
 }
 
-.flying-button-parent button{
-    @apply border-[#3b82f6] bg-[#3b82f6] text-white rounded-full;
-}
-
 /* Price text */
 .text-price {
     @apply text-primary font-bold;
