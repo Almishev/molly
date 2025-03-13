@@ -14,7 +14,7 @@ function AuthLinks({status, userName}) {
           Здравей, {userName}
         </Link>
         <button
-          onClick={() => signOut()}
+          onClick={() => signOut({ callbackUrl: '/' })}
           className="bg-primary rounded-full text-gray-800 hover:text-secondary transition-colors px-8 py-2">
           Изход
         </button>

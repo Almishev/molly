@@ -12,6 +12,7 @@ export default function AddToCartButton({
         <style jsx global>{`
           .flying-button-parent {
             background: #2d2d2d !important;
+            
           }
           .flying-button-parent > div {
             background: #2d2d2d !important;
