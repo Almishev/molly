@@ -7,25 +7,25 @@ const roboto = Roboto({ subsets: ['latin'], weight: ['400', '500', '700'] })
 
 export const metadata = {
   title: {
-    default: 'Molly - Гироси и Дюнери | Доставка на храна в Гоце Делчев',
+    default: 'Molly - Гироси и Бургери | Доставка на храна в Гоце Делчев',
     template: '%s | Molly Food'
   },
-  description: 'Вкусни гироси и дюнери в София, Благоевград и Гоце Делчев. Бърза доставка на храна за вкъщи в град Гоце Делчев. Прясно приготвена храна от качествени продукти.',
+  description: 'Вкусни гироси и бургери в София, Благоевград и Гоце Делчев. Бърза доставка на храна за вкъщи в град Гоце Делчев. Прясно приготвена храна от качествени продукти.',
   keywords: [
     'гирос', 'дюнер', 'храна за вкъщи', 'доставка на храна',
     'ресторант Гоце Делчев', 'храна Гоце Делчев', 'гирос София',
     'дюнер Благоевград', 'бърза храна', 'гръцка кухня',
     'доставка храна Гоце Делчев', 'ресторант', 'molly food'
   ],
-  metadataBase: new URL('https://molly-food-ordering.vercel.app'),
+  metadataBase: new URL('https://food-delivery-app-molly.vercel.app'),
   openGraph: {
-    title: 'Molly - Гироси и Дюнери | Доставка на храна',
-    description: 'Вкусни гироси и дюнери в София, Благоевград и Гоце Делчев. Бърза доставка на храна за вкъщи в град Гоце Делчев.',
-    url: 'https://molly-food-ordering.vercel.app',
+    title: 'Molly - Гироси и Бургери | Доставка на храна',
+    description: 'Вкусни гироси и бургери в София, Благоевград и Гоце Делчев. Бърза доставка на храна за вкъщи в град Гоце Делчев.',
+    url: 'https://food-delivery-app-molly.vercel.app',
     siteName: 'Molly Food',
     images: [
       {
-        url: 'https://molly-food-ordering.vercel.app/meal.png',
+        url: '/meal.png',
         width: 512,
         height: 512,
         alt: 'Molly Food - Вкусна храна с доставка',
@@ -33,6 +33,12 @@ export const metadata = {
     ],
     locale: 'bg_BG',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Molly - Гироси и Бургери | Доставка на храна',
+    description: 'Вкусни гироси и бургери в София, Благоевград и Гоце Делчев. Бърза доставка на храна за вкъщи в град Гоце Делчев.',
+    images: ['/meal.png'],
   },
   robots: {
     index: true,
@@ -88,10 +94,10 @@ export default function RootLayout({ children }) {
               "@context": "https://schema.org",
               "@type": "Restaurant",
               "name": "Molly Food",
-              "image": "https://molly-food-ordering.vercel.app/meal.png",
-              "url": "https://molly-food-ordering.vercel.app",
+              "image": "https://food-delivery-app-molly.vercel.app/meal.png",
+              "url": "https://food-delivery-app-molly.vercel.app",
               "telephone": "+359893071717",
-              "servesCuisine": ["Гръцка кухня", "Бърза храна", "Гироси", "Дюнери"],
+              "servesCuisine": ["Гръцка кухня", "Бърза храна", "Гироси", "Бургери"],
               "priceRange": "$$",
               "openingHoursSpecification": {
                 "@type": "OpeningHoursSpecification",
@@ -125,13 +131,13 @@ export default function RootLayout({ children }) {
                   },
                   {
                     "@type": "OfferCatalog",
-                    "name": "Дюнери",
+                    "name": "Бургери",
                     "itemListElement": [
                       {
                         "@type": "Offer",
                         "itemOffered": {
                           "@type": "MenuItem",
-                          "name": "Дюнер"
+                          "name": "Бургер"
                         }
                       }
                     ]
@@ -150,8 +156,8 @@ export default function RootLayout({ children }) {
                 "@context": "https://schema.org",
                 "@type": "LocalBusiness",
                 "name": "Molly Food София",
-                "image": "https://molly-food-ordering.vercel.app/meal.png",
-                "url": "https://molly-food-ordering.vercel.app",
+                "image": "https://food-delivery-app-molly.vercel.app/meal.png",
+                "url": "https://food-delivery-app-molly.vercel.app",
                 "telephone": "+359893071717",
                 "priceRange": "$$",
                 "address": {
@@ -172,8 +178,8 @@ export default function RootLayout({ children }) {
                 "@context": "https://schema.org",
                 "@type": "LocalBusiness",
                 "name": "Molly Food Благоевград",
-                "image": "https://molly-food-ordering.vercel.app/meal.png",
-                "url": "https://molly-food-ordering.vercel.app",
+                "image": "https://food-delivery-app-molly.vercel.app/meal.png",
+                "url": "https://food-delivery-app-molly.vercel.app",
                 "telephone": "+359893071717",
                 "priceRange": "$$",
                 "address": {
@@ -194,8 +200,8 @@ export default function RootLayout({ children }) {
                 "@context": "https://schema.org",
                 "@type": "LocalBusiness",
                 "name": "Molly Food Гоце Делчев",
-                "image": "https://molly-food-ordering.vercel.app/meal.png",
-                "url": "https://molly-food-ordering.vercel.app",
+                "image": "https://food-delivery-app-molly.vercel.app/meal.png",
+                "url": "https://food-delivery-app-molly.vercel.app",
                 "telephone": "+359893071717",
                 "priceRange": "$$",
                 "address": {
