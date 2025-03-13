@@ -197,6 +197,7 @@ export default function CartPage() {
               />
             </div>
             <div className="flex flex-col gap-2">
+               {/*
               <button 
                 type="submit" 
                 className="bg-blue-500 text-white py-3 px-4 rounded hover:bg-yellow-500 hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -204,6 +205,8 @@ export default function CartPage() {
               >
                 Плати сега {total.toFixed(2)} лв
               </button>
+              */}
+              
               <button 
                 type="button" 
                 onClick={handleCashOnDelivery} 
