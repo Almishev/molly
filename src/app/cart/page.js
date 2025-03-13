@@ -15,6 +15,7 @@ export default function CartPage() {
   const [address, setAddress] = useState({});
   const {data:profileData} = useProfile();
   const {calculateDeliveryFee, loading: loadingSettings} = useSettings();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -26,13 +27,12 @@ export default function CartPage() {
 
   useEffect(() => {
     if (profileData?.city) {
-      const {phone, streetAddress, city, postalCode, country} = profileData;
+      const {phone, streetAddress, city, notes} = profileData;
       const addressFromProfile = {
         phone,
         streetAddress,
         city,
-        postalCode,
-        country
+        notes
       };
       setAddress(addressFromProfile);
     }
@@ -55,9 +55,14 @@ export default function CartPage() {
   async function proceedToCheckout(ev) {
     ev.preventDefault();
     
+    // Предотвратяване на повторно изпращане
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    
     // Проверка за задължителни полета
     if (!address.phone || !address.streetAddress || !address.city) {
       toast.error('Моля, попълнете всички задължителни полета (телефон, адрес и град)');
+      setIsSubmitting(false);
       return;
     }
     
@@ -88,9 +93,14 @@ export default function CartPage() {
   }
 
   function handleCashOnDelivery() {
+    // Предотвратяване на повторно изпращане
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    
     // Проверка за задължителни полета
     if (!address.phone || !address.streetAddress || !address.city) {
       toast.error('Моля, попълнете всички задължителни полета (телефон, адрес и град)');
+      setIsSubmitting(false);
       return;
     }
     
@@ -119,10 +129,12 @@ export default function CartPage() {
         }
       } else {
         toast.error('Грешка при обработка на поръчката.');
+        setIsSubmitting(false);
       }
     }).catch(error => {
       console.error('Error submitting order:', error);
       toast.error('Грешка при обработка на поръчката.');
+      setIsSubmitting(false);
     });
   }
 
@@ -185,11 +197,20 @@ export default function CartPage() {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <button type="submit" className="bg-blue-500 text-white py-3 px-4 rounded hover:bg-yellow-500 hover:text-black transition-colors">
+              <button 
+                type="submit" 
+                className="bg-blue-500 text-white py-3 px-4 rounded hover:bg-yellow-500 hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isSubmitting}
+              >
                 Плати сега {total.toFixed(2)} лв
               </button>
-              <button type="button" onClick={handleCashOnDelivery} className="bg-blue-500 text-white py-3 px-4 rounded hover:bg-yellow-500 hover:text-black transition-colors">
-                Плати при доставка
+              <button 
+                type="button" 
+                onClick={handleCashOnDelivery} 
+                className="bg-blue-500 text-white py-3 px-4 rounded hover:bg-yellow-500 hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Обработка...' : `Плати при доставка`}
               </button>
             </div>
           </form>

@@ -42,6 +42,14 @@ async function calculateDeliveryFee(subtotal) {
  */
 export async function sendOrderNotification(order) {
   try {
+    // Debug logging
+    console.log('Order data for email:', {
+      phone: order.phone,
+      streetAddress: order.streetAddress,
+      city: order.city,
+      notes: order.notes
+    });
+    
     // Форматиране на продуктите в поръчката
     const productsHtml = order.cartProducts.map(product => {
       const extras = product.extras?.length > 0 
@@ -91,8 +99,7 @@ export async function sendOrderNotification(order) {
       <p><strong>Телефон:</strong> ${order.phone}</p>
       <p><strong>Адрес:</strong> ${order.streetAddress}</p>
       <p><strong>Град:</strong> ${order.city}</p>
-      <p><strong>Пощенски код:</strong> ${order.postalCode || 'Не е посочен'}</p>
-      <p><strong>Държава:</strong> ${order.country || 'България'}</p>
+      ${order.notes ? `<p><strong>Забележки:</strong> ${order.notes}</p>` : ''}
     `;
     
     // Изпращане на имейла

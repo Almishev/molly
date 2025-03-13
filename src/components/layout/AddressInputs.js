@@ -1,5 +1,5 @@
 export default function AddressInputs({addressProps,setAddressProp,disabled=false}) {
-  const {phone, streetAddress, postalCode, city, country} = addressProps;
+  const {phone, streetAddress, city, notes} = addressProps;
   return (
     <>
       <label>Телефон <span className="text-red-500">*</span></label>
@@ -15,30 +15,20 @@ export default function AddressInputs({addressProps,setAddressProp,disabled=fals
         value={streetAddress || ''} onChange={ev => setAddressProp('streetAddress', ev.target.value)}
         required={!disabled}
       />
-      <div className="grid grid-cols-2 gap-2">
-        <div>
-          <label>Пощенски код</label>
-          <input
-            disabled={disabled}
-            type="text" placeholder="Postal code"
-            value={postalCode || ''} onChange={ev => setAddressProp('postalCode', ev.target.value)}
-          />
-        </div>
-        <div>
-          <label>Град <span className="text-red-500">*</span></label>
-          <input
-            disabled={disabled}
-            type="text" placeholder="Град/Село"
-            value={city || ''} onChange={ev => setAddressProp('city', ev.target.value)}
-            required={!disabled}
-          />
-        </div>
-      </div>
-      <label>Държава</label>
+      <label>Град <span className="text-red-500">*</span></label>
       <input
         disabled={disabled}
-        type="text" placeholder="Държава"
-        value={country || ''} onChange={ev => setAddressProp('country', ev.target.value)}
+        type="text" placeholder="Град/Село"
+        value={city || ''} onChange={ev => setAddressProp('city', ev.target.value)}
+        required={!disabled}
+      />
+      <label>Забележки</label>
+      <textarea
+        disabled={disabled}
+        placeholder="Забележки към поръчките"
+        value={notes || ''} 
+        onChange={ev => setAddressProp('notes', ev.target.value)}
+        className="bg-gray-800 border border-gray-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-[#3b82f6]"
       />
     </>
   );

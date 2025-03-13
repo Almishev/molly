@@ -58,6 +58,9 @@ export async function POST(req) {
   const session = await getServerSession(authOptions);
   const userEmail = session?.user?.email;
 
+  // Debug logging
+  console.log('Received address in order request:', address);
+
   try {
     // Изчисляване на междинната сума
     let subtotal = 0;
@@ -89,21 +92,27 @@ export async function POST(req) {
     
     const orderDoc = await Order.create({
       userEmail,
-      ...address,
+      phone: address.phone,
+      streetAddress: address.streetAddress,
+      city: address.city,
+      notes: address.notes || '',
       cartProducts,
       paid,
       deliveryFee, // Запазваме таксата за доставка в поръчката
     });
     
-    // Изпращане на имейл за нова поръчка
-    try {
-      await sendOrderNotification(orderDoc);
-      console.log('Order notification email sent successfully');
-    } catch (emailError) {
-      console.error('Failed to send order notification email:', emailError);
-      // Продължаваме изпълнението, дори ако имейлът не е изпратен успешно
-    }
+    // Започваме изпращане на имейл, но НЕ изчакваме да завърши
+    // Това ще направи процеса асинхронен и няма да блокира отговора
+    Promise.resolve().then(async () => {
+      try {
+        await sendOrderNotification(orderDoc);
+        console.log('Order notification email sent successfully');
+      } catch (emailError) {
+        console.error('Failed to send order notification email:', emailError);
+      }
+    });
     
+    // Веднага връщаме отговор, без да чакаме имейлът да бъде изпратен
     return Response.json({
       success: true,
       orderId: orderDoc._id.toString(),

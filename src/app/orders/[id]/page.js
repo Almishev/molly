@@ -24,6 +24,7 @@ export default function OrderPage() {
       setLoadingOrder(true);
       fetch('/api/orders?_id='+id).then(res => {
         res.json().then(orderData => {
+          console.log('Fetched order:', orderData);
           setOrder(orderData);
           setLoadingOrder(false);
         });
