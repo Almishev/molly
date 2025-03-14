@@ -71,10 +71,10 @@ export default function Header() {
         <div
           onClick={() => setMobileNavOpen(false)}
           className="md:hidden p-4 bg-[#2d2d2d] rounded-lg mt-2 flex flex-col gap-2 text-center">
-          <Link href={'/'}>Начало</Link>
-          <Link href={'/menu'}>Меню</Link>
-          <Link href={'/#about'}>За нас</Link>
-          <Link href={'/#contact'}>Контакт</Link>
+          <Link href={'/'} className="font-bold">НАЧАЛО</Link>
+          <Link href={'/menu'} className="font-bold">МЕНЮ</Link>
+          <Link href={'/#about'} className="font-bold">ЗА НАС</Link>
+          <Link href={'/#contact'} className="font-bold">КОНТАКТ</Link>
           <AuthLinks status={status} userName={userName} />
         </div>
       )}
@@ -83,10 +83,10 @@ export default function Header() {
           <Link className="text-primary font-semibold text-2xl" href={'/'}>
             MOLLY
           </Link>
-          <Link href={'/'}>Начало</Link>
-          <Link href={'/menu'}>Меню</Link>
-          <Link href={'/#about'}>За нас</Link>
-          <Link href={'/#contact'}>Контакт</Link>
+          <Link href={'/'}>НАЧАЛО</Link>
+          <Link href={'/menu'}>МЕНЮ</Link>
+          <Link href={'/#about'}>ЗА НАС</Link>
+          <Link href={'/#contact'}>КОНТАКТ</Link>
         </nav>
         <nav className="flex items-center gap-4 text-gray-200 font-semibold">
           <AuthLinks status={status} userName={userName} />
