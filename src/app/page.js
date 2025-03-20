@@ -26,17 +26,14 @@ export default function Home() {
                на продукта и в София, Студентски град, улица Джон Ленън 4!
           </p>
           <p>
-            Горди сме да ви посрещнем в нашите три обекта в България:
+            Горди сме да ви посрещнем в нашите обекти в България:
           </p>
-          <div className="grid md:grid-cols-3 gap-4 my-4">
+          <div className="grid md:grid-cols-2 gap-4 my-4">
             <div className="bg-black bg-opacity-30 rounded-lg p-4">
               <h3 className="text-xl font-semibold mb-2">София</h3>
               <p className="text-sm">Насладете се на нашите специалитети в сърцето на Студентски град. <br />  ул. Джон Ленън 4</p>
             </div>
-            <div className="bg-black bg-opacity-30 rounded-lg p-4">
-              <h3 className="text-xl font-semibold mb-2">Благоевград</h3>
-              <p className="text-sm">Открийте автентичния вкус на гръцката кухня във Вашият град.  <br />  ул. Славянска 83</p>
-            </div>
+            
             <div className="bg-black bg-opacity-30 rounded-lg p-4">
               <h3 className="text-xl font-semibold mb-2">Гоце Делчев</h3>
               <p className="text-sm">Единственият ни обект с доставка до вашия дом! Поръчайте онлайн или на място. <br />  ул. Серес 17</p>
@@ -58,12 +55,12 @@ export default function Home() {
           mainHeader={'Свържете се с нас'}
         />
         <div className="mt-8 flex flex-col items-center gap-4">
-          <a className="text-4xl underline text-white hover:text-yellow-400 transition-colors" href="tel:00359893071717">
-            0893071717
+          <a className="text-4xl underline text-white hover:text-yellow-400 transition-colors" href="tel:00359899071718">
+            0899071718
           </a>
           <p className="text-white">За доставки: 10:00 - 22:00 <br />Работно време на място: 09:00 - 01:00</p>
           <div className="flex gap-4 text-white">
-            <a href="viber://chat?number=%2B359893071717" className="hover:text-yellow-400 transition-colors">
+            <a href="viber://chat?number=%2B359899071718" className="hover:text-yellow-400 transition-colors">
               Viber
             </a>
             <span>|</span>
