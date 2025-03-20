@@ -17,7 +17,7 @@ export default function Hero() {
           Гиросът е липсващото парче, което прави всеки ден завършен, малка, но вкусна радост в живота.
           Доставка в град <span className="text-blue-600 font-bold">Гоце Делчев </span>
            и ресторант за бързо хранене в 
-           <span className="text-yellow-400 font-bold"> София</span> сърцето на 
+           <span className="text-yellow-400 font-bold"> София</span>, сърцето на 
             <span className="text-red-600 font-bold" > Студентски град </span>- улица Джон Ленън № 4.
         </p>
         <div className="flex gap-4 text-sm">
