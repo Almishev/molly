@@ -14,7 +14,13 @@ export default function CartPage() {
   const {cartProducts,removeCartProduct} = useContext(CartContext);
   const [address, setAddress] = useState({});
   const {data:profileData} = useProfile();
-  const {calculateDeliveryFee, loading: loadingSettings} = useSettings();
+  const {
+    calculateDeliveryFee, 
+    loading: loadingSettings, 
+    isDeliveryAvailable, 
+    deliveryUnavailableMessage,
+    isWithinBusinessHours
+  } = useSettings();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -197,24 +203,31 @@ export default function CartPage() {
               />
             </div>
             <div className="flex flex-col gap-2">
-               {/*
-              <button 
-                type="submit" 
-                className="bg-blue-500 text-white py-3 px-4 rounded hover:bg-yellow-500 hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={isSubmitting}
-              >
-                Плати сега {total.toFixed(2)} лв
-              </button>
-              */}
-              
-              <button 
-                type="button" 
-                onClick={handleCashOnDelivery} 
-                className="bg-blue-500 text-white py-3 px-4 rounded hover:bg-yellow-500 hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'Обработка...' : `Плати при доставка`}
-              </button>
+              {!isDeliveryAvailable ? (
+                <div className="p-6 mb-4 rounded-lg bg-gray-900 border border-yellow-400 text-center shadow-lg">
+                  <div className="text-red-500 text-3xl mb-3">⚠️</div>
+                  <h3 className="text-yellow-400 text-xl font-bold mb-3">Доставките временно недостъпни</h3>
+                  <div className="bg-black bg-opacity-50 p-4 rounded-md mb-4">
+                    <p className="text-white">{deliveryUnavailableMessage}</p>
+                  </div>
+                  {!isWithinBusinessHours() && (
+                    <div className="mt-3 border-t border-gray-700 pt-3">
+                      <p className="text-gray-300">Работно време: <span className="text-yellow-400 font-semibold">09:00 - 23:00</span></p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <button 
+                    type="button" 
+                    onClick={handleCashOnDelivery} 
+                    className="bg-blue-500 text-white py-3 px-4 rounded hover:bg-yellow-500 hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? 'Обработка...' : `Плати при доставка`}
+                  </button>
+                </>
+              )}
             </div>
           </form>
         </div>

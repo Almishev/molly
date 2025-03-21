@@ -38,12 +38,17 @@ export async function POST(req) {
     return Response.json({error: 'Name and value are required'}, {status: 400});
   }
   
+  // Преобразуваме стринговите булеви към истински булеви
+  let processedValue = value;
+  if (value === 'true') processedValue = true;
+  if (value === 'false') processedValue = false;
+  
   // Опит за намиране на съществуваща настройка
   let setting = await Settings.findOne({name});
   
   if (setting) {
     // Обновяване на съществуваща настройка
-    setting.value = value;
+    setting.value = processedValue;
     if (description) {
       setting.description = description;
     }
@@ -52,7 +57,7 @@ export async function POST(req) {
     // Създаване на нова настройка
     setting = await Settings.create({
       name,
-      value,
+      value: processedValue,
       description: description || '',
     });
   }
