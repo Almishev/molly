@@ -1,5 +1,5 @@
 export default function sitemap() {
-  const baseUrl = 'https://molly-food-ordering.vercel.app';
+  const baseUrl = 'https://molly.bg';
   
   // Основни страници
   const routes = [
