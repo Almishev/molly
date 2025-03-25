@@ -52,8 +52,11 @@ export const metadata = {
     },
   },
   icons: {
-    icon: '/giros-molly-logo.webp',
-    shortcut: '/giros-molly-logo.webp',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/giros-molly-logo.webp', type: 'image/webp' }
+    ],
+    shortcut: '/favicon.ico',
     apple: '/giros-molly-logo.webp',
     other: [
       {

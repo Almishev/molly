@@ -55,8 +55,15 @@ export default function MenuPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-center">Нашето меню</h1>
+      <section className="mb-12 text-center">
+        <h1 className="text-3xl font-bold mb-4 text-center">Нашето меню</h1>
+        <p className="mb-8 max-w-3xl mx-auto text-gray-600">
+          Открийте разнообразието от вкусни ястия, които предлагаме в Molly. От традиционни гръцки гироси до сочни бургери, 
+          всичко е приготвено с качествени продукти и много любов. Доставяме бързо в София, Благоевград и Гоце Делчев.
+        </p>
+      </section>
       
+      {/* Основно съдържание */}
       {categories.length > 0 ? (
         <div className="space-y-6">
           {categories.map((category, index) => {
@@ -78,6 +85,27 @@ export default function MenuPage() {
           Няма налични категории
         </div>
       )}
+      
+      {/* Допълнителна SEO секция */}
+      <section className="mt-16 pt-8 border-t border-gray-200">
+        <h2 className="text-2xl font-semibold mb-4">Доставка на храна</h2>
+        <p className="mb-4 text-gray-700">
+          Molly предлага бърза и надеждна доставка на храна в София, Благоевград и Гоце Делчев. Нашите курири доставят прясно приготвени ястия директно до вашата врата.
+        </p>
+        <p className="mb-4 text-gray-700">
+          Ние работим всеки ден от 10:00 до 22:00 часа. За поръчки и въпроси можете да се свържете с нас на телефон: 0899071718
+        </p>
+        <div className="mt-8">
+          <h3 className="text-xl font-semibold mb-3">Популярни категории</h3>
+          <div className="flex flex-wrap gap-2">
+            <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm">Гироси</span>
+            <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm">Бургери</span>
+            <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm">Салати</span>
+            <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm">Десерти</span>
+            <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm">Напитки</span>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
