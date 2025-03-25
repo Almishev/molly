@@ -17,6 +17,68 @@ const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "7610481348:AAG2Ucu
 // TODO: Заменете с вашия реален Telegram Chat ID след тестването
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "";
 
+// Проверка на environment
+const isVercel = process.env.VERCEL === '1';
+console.log('Running on Vercel:', isVercel);
+
+/**
+ * По-сигурна версия на fetch, която работи и на Vercel
+ */
+async function safeFetch(url, options) {
+  try {
+    // Първо опитваме със стандартния fetch
+    return await fetch(url, options);
+  } catch (error) {
+    console.error('Standard fetch failed, error:', error);
+    
+    try {
+      // Ако не успее, опитваме с алтернативен метод за достъп до API
+      // Понякога Vercel среда има проблеми с fetch API за външни услуги
+      const https = await import('https');
+      
+      return new Promise((resolve, reject) => {
+        const urlObj = new URL(url);
+        const reqOptions = {
+          hostname: urlObj.hostname,
+          path: urlObj.pathname + urlObj.search,
+          method: options.method || 'GET',
+          headers: options.headers || {},
+        };
+        
+        const req = https.request(reqOptions, (res) => {
+          let data = '';
+          res.on('data', (chunk) => {
+            data += chunk;
+          });
+          
+          res.on('end', () => {
+            resolve({
+              ok: res.statusCode >= 200 && res.statusCode < 300,
+              status: res.statusCode,
+              statusText: res.statusMessage,
+              json: () => Promise.resolve(JSON.parse(data)),
+              text: () => Promise.resolve(data)
+            });
+          });
+        });
+        
+        req.on('error', (e) => {
+          reject(e);
+        });
+        
+        if (options.body) {
+          req.write(options.body);
+        }
+        
+        req.end();
+      });
+    } catch (httpError) {
+      console.error('Alternative HTTP request also failed:', httpError);
+      throw error; // Връщаме оригиналната грешка, ако нито един метод не работи
+    }
+  }
+}
+
 // Конфигурация на транспортера за изпращане на имейли
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST || 'smtp.gmail.com',
@@ -66,6 +128,13 @@ async function calculateDeliveryFee(subtotal) {
  */
 async function sendTelegramMessage(message) {
   console.log('Preparing to send Telegram message');
+  console.log('TELEGRAM_BOT_TOKEN available:', !!TELEGRAM_BOT_TOKEN);
+  console.log('TELEGRAM_CHAT_ID available:', !!TELEGRAM_CHAT_ID);
+  console.log('Environment:', {
+    TELEGRAM_BOT_TOKEN: TELEGRAM_BOT_TOKEN.substring(0, 10) + '...',
+    TELEGRAM_CHAT_ID,
+    isVercel
+  });
   
   if (!TELEGRAM_BOT_TOKEN) {
     console.warn('Telegram bot token not set');
@@ -74,12 +143,11 @@ async function sendTelegramMessage(message) {
 
   try {
     // Ако нямаме Chat ID, ще направим тестово извикване към getUpdates
-    // за да помогнем на потребителя да намери своя Chat ID
     if (!TELEGRAM_CHAT_ID) {
       console.log('No Chat ID configured. Checking for recent messages to the bot...');
       try {
         const updatesUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getUpdates`;
-        const updatesResponse = await fetch(updatesUrl);
+        const updatesResponse = await safeFetch(updatesUrl);
         const updatesData = await updatesResponse.json();
         
         console.log('getUpdates response:', updatesData);
@@ -95,7 +163,7 @@ async function sendTelegramMessage(message) {
             
             // Пробваме да изпратим съобщение използвайки намерения chat_id
             const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-            const response = await fetch(url, {
+            const response = await safeFetch(url, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -138,28 +206,51 @@ async function sendTelegramMessage(message) {
 
     // Нормално изпращане на съобщение с конфигуриран Chat ID
     const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    console.log('Sending to Telegram API:', { 
+      url: url.substring(0, 50) + '...',
+      chat_id: TELEGRAM_CHAT_ID, 
+      messageLength: message.length 
+    });
+    
+    try {
+      const postData = JSON.stringify({
         chat_id: TELEGRAM_CHAT_ID,
         text: message,
         parse_mode: 'HTML'
-      })
-    });
-    
-    const data = await response.json();
-    
-    if (data.ok) {
-      console.log('Telegram message sent successfully', {
-        message_id: data.result.message_id
       });
-      return { success: true, messageId: data.result.message_id };
-    } else {
-      console.error('Error sending Telegram message:', data);
-      return { success: false, error: data.description };
+      
+      console.log('Request body length:', postData.length);
+      
+      const response = await safeFetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: postData
+      });
+      
+      if (!response.ok) {
+        const text = await response.text();
+        console.error('Telegram API response not OK:', { status: response.status, statusText: response.statusText, text });
+        return { success: false, error: `HTTP error: ${response.status} ${response.statusText}` };
+      }
+      
+      const data = await response.json();
+      
+      console.log('Telegram API response:', data);
+      
+      if (data.ok) {
+        console.log('Telegram message sent successfully', {
+          message_id: data.result.message_id
+        });
+        return { success: true, messageId: data.result.message_id };
+      } else {
+        console.error('Error sending Telegram message:', data);
+        return { success: false, error: data.description };
+      }
+    } catch (fetchError) {
+      console.error('Fetch error when sending to Telegram:', fetchError);
+      return { success: false, error: `Fetch error: ${fetchError.message}` };
     }
   } catch (error) {
     console.error('Error sending Telegram message:', error);
