@@ -11,6 +11,12 @@ console.log('Mailer initializing with config:', {
   // password masked for security
 });
 
+// Telegram bot token от BotFather
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "7610481348:AAG2UcuYMDL_FBz2VvunmFX9y1gMC-17T6k";
+// Chat ID на човека, който трябва да получава известия
+// TODO: Заменете с вашия реален Telegram Chat ID след тестването
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "";
+
 // Конфигурация на транспортера за изпращане на имейли
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST || 'smtp.gmail.com',
@@ -50,6 +56,114 @@ async function calculateDeliveryFee(subtotal) {
   } catch (error) {
     console.error('Error calculating delivery fee:', error);
     return 1; // Връщане на стандартна такса за доставка при грешка
+  }
+}
+
+/**
+ * Изпраща съобщение до Telegram бот
+ * @param {string} message - Текстът на съобщението
+ * @returns {Promise} - Promise с резултата
+ */
+async function sendTelegramMessage(message) {
+  console.log('Preparing to send Telegram message');
+  
+  if (!TELEGRAM_BOT_TOKEN) {
+    console.warn('Telegram bot token not set');
+    return { success: false, error: 'Missing Telegram bot token' };
+  }
+
+  try {
+    // Ако нямаме Chat ID, ще направим тестово извикване към getUpdates
+    // за да помогнем на потребителя да намери своя Chat ID
+    if (!TELEGRAM_CHAT_ID) {
+      console.log('No Chat ID configured. Checking for recent messages to the bot...');
+      try {
+        const updatesUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getUpdates`;
+        const updatesResponse = await fetch(updatesUrl);
+        const updatesData = await updatesResponse.json();
+        
+        console.log('getUpdates response:', updatesData);
+        
+        if (updatesData.ok && updatesData.result && updatesData.result.length > 0) {
+          // Намерен е chat_id от последното съобщение
+          const lastMessage = updatesData.result[updatesData.result.length - 1];
+          const detectedChatId = lastMessage.message?.chat?.id;
+          
+          if (detectedChatId) {
+            console.log('Detected Chat ID from recent messages:', detectedChatId);
+            console.log('Set this as TELEGRAM_CHAT_ID in your environment variables');
+            
+            // Пробваме да изпратим съобщение използвайки намерения chat_id
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+            const response = await fetch(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                chat_id: detectedChatId,
+                text: `${message}\n\n<i>Забележка: Това е автоматично съобщение, използващо намерения Chat ID. Конфигурирайте TELEGRAM_CHAT_ID=${detectedChatId} в среда.</i>`,
+                parse_mode: 'HTML'
+              })
+            });
+            
+            const data = await response.json();
+            
+            if (data.ok) {
+              console.log('Telegram message sent successfully with detected Chat ID', {
+                message_id: data.result.message_id,
+                chat_id: detectedChatId
+              });
+              return { 
+                success: true, 
+                messageId: data.result.message_id,
+                note: `Използван е автоматично намерен Chat ID: ${detectedChatId}. Моля, добавете TELEGRAM_CHAT_ID=${detectedChatId} в environment variables.`
+              };
+            }
+          }
+        }
+        
+        console.warn('Could not find a Chat ID from recent messages. Please send a message to your Telegram bot and try again.');
+        return { 
+          success: false, 
+          error: 'No Chat ID configured and none could be found from recent messages. Please check the console for more information.' 
+        };
+        
+      } catch (error) {
+        console.error('Error checking for Chat ID:', error);
+      }
+      
+      return { success: false, error: 'No Telegram Chat ID configured' };
+    }
+
+    // Нормално изпращане на съобщение с конфигуриран Chat ID
+    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: message,
+        parse_mode: 'HTML'
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (data.ok) {
+      console.log('Telegram message sent successfully', {
+        message_id: data.result.message_id
+      });
+      return { success: true, messageId: data.result.message_id };
+    } else {
+      console.error('Error sending Telegram message:', data);
+      return { success: false, error: data.description };
+    }
+  } catch (error) {
+    console.error('Error sending Telegram message:', error);
+    return { success: false, error: error.message };
   }
 }
 
@@ -174,6 +288,37 @@ export async function sendOrderNotification(order) {
       `,
     });
     
+    // Подготовка на съобщение за Telegram
+    const telegramMessage = `
+<b>🛍️ Нова поръчка #${order._id}</b>
+
+<b>Информация за поръчката:</b>
+📱 <b>Телефон:</b> ${order.phone}
+📍 <b>Адрес:</b> ${order.streetAddress}
+🏙️ <b>Град:</b> ${order.city}
+${order.notes ? `📝 <b>Забележки:</b> ${order.notes}` : ''}
+
+<b>Продукти (${order.cartProducts.length}):</b>
+${order.cartProducts.map(product => {
+  const extras = product.extras?.length > 0 
+    ? ` + Екстри: ${product.extras.map(e => e.name).join(', ')}` 
+    : '';
+  const size = product.size ? ` (${product.size.name})` : '';
+  
+  return `- ${product.name}${size} x ${product.quantity || 1}${extras}`;
+}).join('\n')}
+
+<b>Плащане:</b>
+💰 <b>Сума:</b> ${subtotal.toFixed(2)} лв
+🚚 <b>Доставка:</b> ${deliveryFee.toFixed(2)} лв
+${deliveryFee === 0 ? '🎉 <b>Безплатна доставка!</b>' : ''}
+💵 <b>Общо:</b> ${total.toFixed(2)} лв
+💳 <b>Статус:</b> ${order.paid ? 'Платена' : 'Плащане при доставка'}
+    `;
+    
+    // Изпращане на съобщение в Telegram
+    await sendTelegramMessage(telegramMessage);
+    
     console.log('Email sent successfully:', {
       messageId: info.messageId,
       response: info.response,
@@ -183,7 +328,7 @@ export async function sendOrderNotification(order) {
     
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error('Error sending order notifications:', error);
     console.error('Error details:', {
       name: error.name,
       message: error.message,
@@ -197,17 +342,23 @@ export async function sendOrderNotification(order) {
 }
 
 /**
- * Изпраща тестов имейл за проверка на конфигурацията
+ * Изпраща тестов имейл и Telegram съобщение за проверка на конфигурацията
  * @returns {Promise} - Promise с резултата от изпращането
  */
 export async function sendTestEmail() {
   console.log('Starting sendTestEmail function');
+  
+  const results = {
+    email: null,
+    telegram: null
+  };
+  
   try {
     console.log('Preparing to send test email to: miroslavsinanov72@gmail.com');
     
     const info = await transporter.sendMail({
       from: `"MOLLY Food Ordering" <${process.env.EMAIL_USER || 'mineralhotelinfo@gmail.com'}>`,
-      to: 'miroslavsinanov72@gmail.com.com',
+      to: 'miroslavsinanov72@gmail.com',
       subject: 'Тестов имейл от MOLLY Food Ordering',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; text-align: center;">
@@ -228,9 +379,21 @@ export async function sendTestEmail() {
       rejected: info.rejected
     });
     
-    return { success: true, messageId: info.messageId };
+    results.email = { success: true, messageId: info.messageId };
+    
+    // Изпращане на тестово съобщение в Telegram
+    const telegramResult = await sendTelegramMessage(`
+<b>🧪 Тестово съобщение от MOLLY Food Ordering</b>
+
+Това е тестово съобщение от системата за поръчки MOLLY Food.
+Ако получавате това съобщение, значи конфигурацията за Telegram известия работи правилно.
+    `);
+    
+    results.telegram = telegramResult;
+    
+    return { success: true, results };
   } catch (error) {
-    console.error('Error sending test email:', error);
+    console.error('Error sending test notifications:', error);
     console.error('Error details:', {
       name: error.name,
       message: error.message,
@@ -240,6 +403,6 @@ export async function sendTestEmail() {
       stack: error.stack
     });
     
-    return { success: false, error: error.message };
+    return { success: false, error: error.message, results };
   }
 } 
