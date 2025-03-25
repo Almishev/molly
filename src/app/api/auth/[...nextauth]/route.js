@@ -19,7 +19,7 @@ export const authOptions = {
     signIn: '/login',
     error: '/login',
   },
-  debug: true,
+  debug: process.env.NODE_ENV !== "production",
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
