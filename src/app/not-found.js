@@ -11,7 +11,7 @@ export default function NotFound() {
     <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center">
       <div className="mb-8 relative w-48 h-48">
         <Image
-          src="/icon.webp"
+          src="/meal.png"
           alt="Molly Food Ordering Logo"
           fill
           sizes="(max-width: 768px) 100vw, 192px"

@@ -25,7 +25,7 @@ export const metadata = {
     siteName: 'Molly Food',
     images: [
       {
-        url: 'https://molly.bg/meal.png',
+        url: 'https://molly.bg/giros-molly-logo.webp',
         width: 512,
         height: 512,
         alt: 'Molly Food - Вкусна храна с доставка',
@@ -38,7 +38,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Molly - Гироси и Бургери | Доставка на храна',
     description: 'Вкусни гироси и бургери в София, Благоевград и Гоце Делчев. Бърза доставка на храна за вкъщи в град Гоце Делчев.',
-    images: ['https://molly.bg/meal.png'],
+    images: ['https://molly.bg/giros-molly-logo.webp'],
   },
   robots: {
     index: true,
@@ -52,25 +52,25 @@ export const metadata = {
     },
   },
   icons: {
-    icon: '/meal.png',
-    shortcut: '/meal.png',
-    apple: '/meal.png',
+    icon: '/giros-molly-logo.webp',
+    shortcut: '/giros-molly-logo.webp',
+    apple: '/giros-molly-logo.webp',
     other: [
       {
         rel: 'apple-touch-icon',
-        url: '/meal.png',
+        url: '/giros-molly-logo.webp',
       },
       {
         rel: 'icon',
         type: 'image/png',
         sizes: '32x32',
-        url: '/meal.png',
+        url: '/giros-molly-logo.webp',
       },
       {
         rel: 'icon',
         type: 'image/png',
         sizes: '16x16',
-        url: '/meal.png',
+        url: '/giros-molly-logo.webp',
       }
     ]
   },
@@ -95,7 +95,7 @@ export default function RootLayout({ children }) {
               "@context": "https://schema.org",
               "@type": "Restaurant",
               "name": "Molly Food",
-              "image": "https://molly.bg/meal.png",
+              "image": "https://molly.bg/giros-molly-logo.webp",
               "url": "https://molly.bg",
               "telephone": "+359899071718",
               "servesCuisine": ["Гръцка кухня", "Бърза храна", "Гироси", "Бургери"],
@@ -157,7 +157,7 @@ export default function RootLayout({ children }) {
                 "@context": "https://schema.org",
                 "@type": "LocalBusiness",
                 "name": "Molly Food София",
-                "image": "https://molly.bg/meal.png",
+                "image": "https://molly.bg/giros-molly-logo.webp",
                 "url": "https://molly.bg",
                 "telephone": "+359899071718",
                 "priceRange": "$$",
@@ -179,7 +179,7 @@ export default function RootLayout({ children }) {
                 "@context": "https://schema.org",
                 "@type": "LocalBusiness",
                 "name": "Molly Food Благоевград",
-                "image": "https://molly.bg/meal.png",
+                "image": "https://molly.bg/giros-molly-logo.webp",
                 "url": "https://molly.bg",
                 "telephone": "+359893071717",
                 "priceRange": "$$",
@@ -201,7 +201,7 @@ export default function RootLayout({ children }) {
                 "@context": "https://schema.org",
                 "@type": "LocalBusiness",
                 "name": "Molly Food Гоце Делчев",
-                "image": "https://molly.bg/meal.png",
+                "image": "https://molly.bg/giros-molly-logo.webp",
                 "url": "https://molly.bg",
                 "telephone": "+359899 07 1718",
                 "priceRange": "$$",

@@ -2,6 +2,15 @@ import nodemailer from 'nodemailer';
 import { cartProductPrice } from '@/components/AppContext';
 import { Settings } from '@/models/Settings';
 
+// Debug config info
+console.log('Mailer initializing with config:', {
+  host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+  port: process.env.EMAIL_PORT || 587,
+  secure: false,
+  user: process.env.EMAIL_USER || 'mineralhotelinfo@gmail.com',
+  // password masked for security
+});
+
 // Конфигурация на транспортера за изпращане на имейли
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST || 'smtp.gmail.com',
@@ -11,6 +20,15 @@ const transporter = nodemailer.createTransport({
     user: process.env.EMAIL_USER || 'mineralhotelinfo@gmail.com',
     pass: process.env.EMAIL_PASS || 'ylnppaqssnyjftcc',
   },
+});
+
+// Verify connection configuration
+transporter.verify(function(error, success) {
+  if (error) {
+    console.log("SMTP Connection Error:", error);
+  } else {
+    console.log("SMTP Server connection successful");
+  }
 });
 
 // Функция за изчисляване на такса за доставка въз основа на настройките
@@ -41,13 +59,16 @@ async function calculateDeliveryFee(subtotal) {
  * @returns {Promise} - Promise с резултата от изпращането
  */
 export async function sendOrderNotification(order) {
+  console.log('Starting sendOrderNotification with order ID:', order._id);
   try {
     // Debug logging
     console.log('Order data for email:', {
       phone: order.phone,
       streetAddress: order.streetAddress,
       city: order.city,
-      notes: order.notes
+      notes: order.notes,
+      cartProducts: order.cartProducts?.length || 0,
+      userEmail: order.userEmail || 'guest'
     });
     
     // Форматиране на продуктите в поръчката
@@ -103,9 +124,19 @@ export async function sendOrderNotification(order) {
     `;
     
     // Изпращане на имейла
+    console.log('Preparing to send email with data:', {
+      from: `"MOLLY Food Ordering" <${process.env.EMAIL_USER || 'mineralhotelinfo@gmail.com'}>`,
+      to: 'miroslavsinanov72@gmail.com',
+      subject: `Нова поръчка #${order._id}`,
+      contentLength: `HTML content length: ${productsHtml.length} characters`,
+      subtotal,
+      deliveryFee,
+      total
+    });
+    
     const info = await transporter.sendMail({
       from: `"MOLLY Food Ordering" <${process.env.EMAIL_USER || 'mineralhotelinfo@gmail.com'}>`,
-      to: 'antonalmishev123@gmail.com',
+      to: 'miroslavsinanov72@gmail.com',
       subject: `Нова поръчка #${order._id}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -143,10 +174,24 @@ export async function sendOrderNotification(order) {
       `,
     });
     
-    console.log('Email sent successfully:', info.messageId);
+    console.log('Email sent successfully:', {
+      messageId: info.messageId,
+      response: info.response,
+      accepted: info.accepted,
+      rejected: info.rejected
+    });
+    
     return { success: true, messageId: info.messageId };
   } catch (error) {
     console.error('Error sending email:', error);
+    console.error('Error details:', {
+      name: error.name,
+      message: error.message,
+      code: error.code,
+      command: error.command,
+      responseCode: error.responseCode,
+      stack: error.stack
+    });
     return { success: false, error: error.message };
   }
 }
@@ -156,10 +201,13 @@ export async function sendOrderNotification(order) {
  * @returns {Promise} - Promise с резултата от изпращането
  */
 export async function sendTestEmail() {
+  console.log('Starting sendTestEmail function');
   try {
+    console.log('Preparing to send test email to: miroslavsinanov72@gmail.com');
+    
     const info = await transporter.sendMail({
       from: `"MOLLY Food Ordering" <${process.env.EMAIL_USER || 'mineralhotelinfo@gmail.com'}>`,
-      to: 'antonalmishev123@gmail.com',
+      to: 'miroslavsinanov72@gmail.com.com',
       subject: 'Тестов имейл от MOLLY Food Ordering',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; text-align: center;">
@@ -173,10 +221,25 @@ export async function sendTestEmail() {
       `,
     });
     
-    console.log('Test email sent successfully:', info.messageId);
+    console.log('Test email sent successfully:', {
+      messageId: info.messageId,
+      response: info.response,
+      accepted: info.accepted,
+      rejected: info.rejected
+    });
+    
     return { success: true, messageId: info.messageId };
   } catch (error) {
     console.error('Error sending test email:', error);
+    console.error('Error details:', {
+      name: error.name,
+      message: error.message,
+      code: error.code,
+      command: error.command,
+      responseCode: error.responseCode,
+      stack: error.stack
+    });
+    
     return { success: false, error: error.message };
   }
 } 
