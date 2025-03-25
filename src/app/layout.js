@@ -75,7 +75,8 @@ export const metadata = {
     ]
   },
   verification: {
-    google: 'PnwDloJ9UapcB0B5c9xEoI7swQs5vtV78', // Заменете с вашия код, когато го имате
+    google: 'PnwDloJ9UapcB0B5c9xEoI7swQs5vtV78xkbE_VfWcA', // Заменете с вашия код, когато го имате
+    
   },
   alternates: {
     canonical: 'https://molly.bg'

@@ -5,6 +5,6 @@ export default function robots() {
       allow: '/',
       disallow: ['/api/', '/admin/'],
     },
-    sitemap: 'https://molly-food-ordering.vercel.app/sitemap.xml',
+    sitemap: 'https://molly.bg/sitemap.xml',
   }
 } 
