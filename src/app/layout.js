@@ -53,27 +53,26 @@ export const metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/giros-molly-logo.webp', type: 'image/webp' }
+      { url: '/logo-molly-goce-delchev.jpg', sizes: 'any' }
     ],
-    shortcut: '/favicon.ico',
-    apple: '/giros-molly-logo.webp',
+    shortcut: '/logo-molly-goce-delchev.jpg',
+    apple: '/logo-molly-goce-delchev.jpg',
     other: [
       {
         rel: 'apple-touch-icon',
-        url: '/giros-molly-logo.webp',
+        url: '/logo-molly-goce-delchev.jpg',
       },
       {
         rel: 'icon',
-        type: 'image/png',
+        type: 'image/jpeg',
         sizes: '32x32',
-        url: '/giros-molly-logo.webp',
+        url: '/logo-molly-goce-delchev.jpg',
       },
       {
         rel: 'icon',
-        type: 'image/png',
+        type: 'image/jpeg',
         sizes: '16x16',
-        url: '/giros-molly-logo.webp',
+        url: '/logo-molly-goce-delchev.jpg',
       }
     ]
   },

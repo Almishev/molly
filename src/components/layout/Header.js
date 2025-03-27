@@ -15,7 +15,7 @@ function AuthLinks({status, userName}) {
         </Link>
         <button
           onClick={() => signOut({ callbackUrl: '/' })}
-          className="bg-primary rounded-full text-gray-800 hover:text-secondary transition-colors px-8 py-2">
+          className="bg-yellow-500 rounded-full text-gray-800 hover:text-secondary transition-colors px-8 py-2">
           Изход
         </button>
       </>
@@ -24,9 +24,9 @@ function AuthLinks({status, userName}) {
   if (status === 'unauthenticated') {
     return (
       <>
-        <Link href={'/login'}>Вход</Link>
-        <Link href={'/register'} className="bg-primary rounded-full text-gray-800 hover:text-secondary transition-colors px-8 py-2">
-          Регистрация
+        <Link href={'/login'}>ВХОД</Link>
+        <Link href={'/register'} className="bg-yellow-500 rounded-full text-gray-800 hover:text-secondary transition-colors px-8 py-2">
+          РЕГИСТРАЦИЯ
         </Link>
       </>
     );
@@ -48,7 +48,7 @@ export default function Header() {
   return (
     <header>
       <div className="flex items-center md:hidden justify-between">
-        <Link className="text-primary font-semibold text-2xl" href={'/'}>
+        <Link className="text-yellow-500 font-semibold text-2xl" href={'/'}>
           MOLLY
         </Link>
         <div className="flex gap-8 items-center">
