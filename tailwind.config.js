@@ -6,7 +6,7 @@ const config = {
   theme: {
     extend: {
       colors: {
-        primary: '#FFE135', // Светло жълт цвят
+        primary: '#EAB308', // yellow-500
         secondary: '#4169E1', // Син цвят
         dark: '#000000', // Черен цвят
       },
