@@ -5,29 +5,28 @@ import CategorySection from '@/components/menu/CategorySection';
 export default function MenuPage() {
   const [categories, setCategories] = useState([]);
   const [menuItems, setMenuItems] = useState([]);
-  const [expandedIndex, setExpandedIndex] = useState(0); // Default to first category
+  const [expandedIndex, setExpandedIndex] = useState(0); 
   const [loading, setLoading] = useState(true);
   const [categoryItemsMap, setCategoryItemsMap] = useState({});
 
   useEffect(() => {
-    // Fetch categories and menu items
+   
     Promise.all([
       fetch('/api/categories').then(res => res.json()),
       fetch('/api/menu-items').then(res => res.json())
     ])
       .then(([categoriesData, menuItemsData]) => {
-        // Categories are already sorted by the API based on the order field
+        
         setCategories(categoriesData);
         setMenuItems(menuItemsData);
         
-        // Create a map of category ID to menu items
+      
         const itemsMap = {};
         categoriesData.forEach(category => {
           itemsMap[category._id] = menuItemsData.filter(item => item.category === category._id);
         });
         setCategoryItemsMap(itemsMap);
         
-        // Set the first category as expanded by default if categories exist
         if (categoriesData.length > 0) {
           setExpandedIndex(0);
         }
@@ -40,7 +39,7 @@ export default function MenuPage() {
       });
   }, []);
 
-  // Toggle category expansion by index
+
   const toggleCategory = (index) => {
     setExpandedIndex(prevIndex => prevIndex === index ? null : index);
   };

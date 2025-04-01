@@ -14,7 +14,6 @@ export default function SettingsPage() {
   const [closingHour, setClosingHour] = useState('22');
   const [isSaving, setIsSaving] = useState(false);
   
-  // Зареждане на настройките при зареждане на страницата
   useEffect(() => {
     fetch('/api/settings')
       .then(res => res.json())
@@ -54,12 +53,12 @@ export default function SettingsPage() {
       });
   }, []);
   
-  // Запазване на настройките
+ 
   async function handleSaveSettings(ev) {
     ev.preventDefault();
     setIsSaving(true);
     
-    // Валидация на въведените стойности
+    
     const deliveryFeeValue = parseFloat(deliveryFee);
     const thresholdValue = parseFloat(freeDeliveryThreshold);
     const openingHourValue = parseInt(openingHour);
@@ -129,7 +128,7 @@ export default function SettingsPage() {
     ];
     
     try {
-      // Изпращане на всички настройки последователно
+      
       for (const setting of settingsToSave) {
         await fetch('/api/settings', {
           method: 'POST',
