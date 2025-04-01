@@ -5,17 +5,16 @@ import mongoose from "mongoose";
 import {getServerSession} from "next-auth";
 import { sendOrderNotification } from "@/helpers/mailer";
 
-// Функция за изчисляване на такса за доставка въз основа на настройките
 async function calculateDeliveryFee(subtotal) {
   try {
-    // Получаване на настройките от базата данни
+    
     const deliveryFeeSetting = await Settings.findOne({ name: 'deliveryFee' });
     const thresholdSetting = await Settings.findOne({ name: 'freeDeliveryThreshold' });
     
     const deliveryFee = deliveryFeeSetting ? deliveryFeeSetting.value : 1;
     const freeDeliveryThreshold = thresholdSetting ? thresholdSetting.value : 0;
     
-    // Ако сумата е над прага за безплатна доставка и прагът е по-голям от 0
+    
     if (freeDeliveryThreshold > 0 && subtotal >= freeDeliveryThreshold) {
       return 0;
     }
@@ -23,7 +22,7 @@ async function calculateDeliveryFee(subtotal) {
     return deliveryFee;
   } catch (error) {
     console.error('Error calculating delivery fee:', error);
-    return 1; // Връщане на стандартна такса за доставка при грешка
+    return 1; 
   }
 }
 
@@ -58,21 +57,21 @@ export async function POST(req) {
   const session = await getServerSession(authOptions);
   const userEmail = session?.user?.email;
 
-  // Debug logging
+  
   console.log('Received address in order request:', address);
 
   try {
-    // Изчисляване на междинната сума
+    
     let subtotal = 0;
     for (const product of cartProducts) {
       let productPrice = product.basePrice || 0;
       
-      // Add size price if available
+      
       if (product.size && product.size.price) {
         productPrice += product.size.price;
       }
       
-      // Add extras prices if available
+      
       if (product.extras && product.extras.length > 0) {
         for (const extra of product.extras) {
           if (extra.price) {
@@ -84,10 +83,10 @@ export async function POST(req) {
       subtotal += productPrice * (product.quantity || 1);
     }
     
-    // Закръгляне до втория знак след десетичната запетая
+    
     subtotal = parseFloat(subtotal.toFixed(2));
     
-    // Изчисляване на такса за доставка въз основа на настройките
+    
     const deliveryFee = await calculateDeliveryFee(subtotal);
     
     const orderDoc = await Order.create({
@@ -98,11 +97,10 @@ export async function POST(req) {
       notes: address.notes || '',
       cartProducts,
       paid,
-      deliveryFee, // Запазваме таксата за доставка в поръчката
+      deliveryFee, 
     });
     
-    // Започваме изпращане на имейл, но НЕ изчакваме да завърши
-    // Това ще направи процеса асинхронен и няма да блокира отговора
+    
     Promise.resolve().then(async () => {
       try {
         await sendOrderNotification(orderDoc);
@@ -112,7 +110,7 @@ export async function POST(req) {
       }
     });
     
-    // Веднага връщаме отговор, без да чакаме имейлът да бъде изпратен
+  
     return Response.json({
       success: true,
       orderId: orderDoc._id.toString(),
@@ -141,7 +139,7 @@ export async function DELETE(req) {
   }
   
   try {
-    // Проверка дали потребителят е администратор
+    
     const session = await getServerSession(authOptions);
     const admin = await isAdmin();
     

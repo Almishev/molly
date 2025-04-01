@@ -15,7 +15,7 @@ export default function MenuItem(menuItem) {
   const [showPopup, setShowPopup] = useState(false);
   const {addToCart} = useContext(CartContext);
 
-  // Check if the item has sizes or extras
+  
   const hasSizesOrExtras = (sizes && sizes.length > 0) || (extraIngredientPrices && extraIngredientPrices.length > 0);
 
   async function handleAddToCartButtonClick() {
@@ -52,10 +52,10 @@ export default function MenuItem(menuItem) {
       selectedPrice += extra.price;
     }
   }
-  // Закръгляне до втория знак след десетичната запетая
+ 
   selectedPrice = parseFloat(selectedPrice.toFixed(2));
 
-  // Common button style
+
   const buttonStyle = "bg-yellow-500 hover:bg-yellow-300 text-black py-2 px-4 rounded-full transition-colors";
 
   return (

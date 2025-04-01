@@ -7,7 +7,6 @@ export default function CategoryNavigation({ categories, activeCategory, setActi
     console.log("Кликнато на категория:", categoryName);
     setActiveCategory(categoryName);
     
-    // Обновяваме URL адреса без презареждане на страницата
     router.push(`/menu/${categoryName}`, { scroll: false });
   };
   

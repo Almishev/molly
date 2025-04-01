@@ -6,17 +6,17 @@ import mongoose from "mongoose";
 import {getServerSession} from "next-auth";
 const stripe = require('stripe')(process.env.STRIPE_SK);
 
-// Функция за изчисляване на такса за доставка въз основа на настройките
+
 async function calculateDeliveryFee(subtotal) {
   try {
-    // Получаване на настройките от базата данни
+   
     const deliveryFeeSetting = await Settings.findOne({ name: 'deliveryFee' });
     const thresholdSetting = await Settings.findOne({ name: 'freeDeliveryThreshold' });
     
     const deliveryFee = deliveryFeeSetting ? deliveryFeeSetting.value : 1;
     const freeDeliveryThreshold = thresholdSetting ? thresholdSetting.value : 0;
     
-    // Ако сумата е над прага за безплатна доставка и прагът е по-голям от 0
+    
     if (freeDeliveryThreshold > 0 && subtotal >= freeDeliveryThreshold) {
       return 0;
     }
@@ -24,7 +24,7 @@ async function calculateDeliveryFee(subtotal) {
     return deliveryFee;
   } catch (error) {
     console.error('Error calculating delivery fee:', error);
-    return 1; // Връщане на стандартна такса за доставка при грешка
+    return 1; 
   }
 }
 
@@ -44,7 +44,7 @@ export async function POST(req) {
 
   const stripeLineItems = [];
   
-  // Изчисляване на междинната сума
+  
   let subtotal = 0;
   
   for (const cartProduct of cartProducts) {
@@ -65,7 +65,7 @@ export async function POST(req) {
       }
     }
 
-    // Закръгляне до втория знак след десетичната запетая
+    
     productPrice = parseFloat(productPrice.toFixed(2));
     subtotal += productPrice;
 
@@ -78,15 +78,15 @@ export async function POST(req) {
         product_data: {
           name: productName,
         },
-        unit_amount: Math.round(productPrice * 100), // Умножаваме по 100 за центове и закръгляме
+        unit_amount: Math.round(productPrice * 100), 
       },
     });
   }
   
-  // Изчисляване на такса за доставка въз основа на настройките
+
   const deliveryFee = await calculateDeliveryFee(subtotal);
 
-  // Актуализиране на поръчката с таксата за доставка
+ 
   await Order.findByIdAndUpdate(orderDoc._id, { deliveryFee });
 
   const stripeSession = await stripe.checkout.sessions.create({

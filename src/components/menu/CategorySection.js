@@ -12,7 +12,7 @@ export default function CategorySection({
   const contentRef = useRef(null);
   const categoryKey = category.name.toLowerCase().replace(/\s+/g, '-');
   
-  // Плавно скролване до секцията, когато се разгъне
+
   useEffect(() => {
     if (isExpanded && sectionRef.current) {
       sectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });

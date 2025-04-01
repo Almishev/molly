@@ -2,38 +2,34 @@ import nodemailer from 'nodemailer';
 import { cartProductPrice } from '@/components/AppContext';
 import { Settings } from '@/models/Settings';
 
-// Debug config info
+
 console.log('Mailer initializing with config:', {
   host: process.env.EMAIL_HOST || 'smtp.gmail.com',
   port: process.env.EMAIL_PORT || 587,
   secure: false,
   user: process.env.EMAIL_USER || 'mineralhotelinfo@gmail.com',
-  // password masked for security
+  
 });
 
-// Telegram bot token от BotFather
+
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "7610481348:AAG2UcuYMDL_FBz2VvunmFX9y1gMC-17T6k";
-// Chat ID на човека, който трябва да получава известия
-// TODO: Заменете с вашия реален Telegram Chat ID след тестването
+
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "";
 
-// Проверка на environment
+
 const isVercel = process.env.VERCEL === '1';
 console.log('Running on Vercel:', isVercel);
 
-/**
- * По-сигурна версия на fetch, която работи и на Vercel
- */
+
 async function safeFetch(url, options) {
   try {
-    // Първо опитваме със стандартния fetch
+    
     return await fetch(url, options);
   } catch (error) {
     console.error('Standard fetch failed, error:', error);
     
     try {
-      // Ако не успее, опитваме с алтернативен метод за достъп до API
-      // Понякога Vercel среда има проблеми с fetch API за външни услуги
+     
       const https = await import('https');
       
       return new Promise((resolve, reject) => {
@@ -74,23 +70,23 @@ async function safeFetch(url, options) {
       });
     } catch (httpError) {
       console.error('Alternative HTTP request also failed:', httpError);
-      throw error; // Връщаме оригиналната грешка, ако нито един метод не работи
+      throw error; 
     }
   }
 }
 
-// Конфигурация на транспортера за изпращане на имейли
+
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST || 'smtp.gmail.com',
   port: process.env.EMAIL_PORT || 587,
-  secure: false, // true за 465, false за други портове
+  secure: false, 
   auth: {
     user: process.env.EMAIL_USER || 'mineralhotelinfo@gmail.com',
     pass: process.env.EMAIL_PASS || 'ylnppaqssnyjftcc',
   },
 });
 
-// Verify connection configuration
+
 transporter.verify(function(error, success) {
   if (error) {
     console.log("SMTP Connection Error:", error);
@@ -99,17 +95,17 @@ transporter.verify(function(error, success) {
   }
 });
 
-// Функция за изчисляване на такса за доставка въз основа на настройките
+
 async function calculateDeliveryFee(subtotal) {
   try {
-    // Получаване на настройките от базата данни
+    
     const deliveryFeeSetting = await Settings.findOne({ name: 'deliveryFee' });
     const thresholdSetting = await Settings.findOne({ name: 'freeDeliveryThreshold' });
     
     const deliveryFee = deliveryFeeSetting ? deliveryFeeSetting.value : 1;
     const freeDeliveryThreshold = thresholdSetting ? thresholdSetting.value : 0;
     
-    // Ако сумата е над прага за безплатна доставка и прагът е по-голям от 0
+   
     if (freeDeliveryThreshold > 0 && subtotal >= freeDeliveryThreshold) {
       return 0;
     }
@@ -117,7 +113,7 @@ async function calculateDeliveryFee(subtotal) {
     return deliveryFee;
   } catch (error) {
     console.error('Error calculating delivery fee:', error);
-    return 1; // Връщане на стандартна такса за доставка при грешка
+    return 1; 
   }
 }
 
@@ -142,7 +138,7 @@ async function sendTelegramMessage(message) {
   }
 
   try {
-    // Ако нямаме Chat ID, ще направим тестово извикване към getUpdates
+   
     if (!TELEGRAM_CHAT_ID) {
       console.log('No Chat ID configured. Checking for recent messages to the bot...');
       try {
@@ -153,7 +149,7 @@ async function sendTelegramMessage(message) {
         console.log('getUpdates response:', updatesData);
         
         if (updatesData.ok && updatesData.result && updatesData.result.length > 0) {
-          // Намерен е chat_id от последното съобщение
+         
           const lastMessage = updatesData.result[updatesData.result.length - 1];
           const detectedChatId = lastMessage.message?.chat?.id;
           
@@ -161,7 +157,7 @@ async function sendTelegramMessage(message) {
             console.log('Detected Chat ID from recent messages:', detectedChatId);
             console.log('Set this as TELEGRAM_CHAT_ID in your environment variables');
             
-            // Пробваме да изпратим съобщение използвайки намерения chat_id
+            
             const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
             const response = await safeFetch(url, {
               method: 'POST',
@@ -204,7 +200,7 @@ async function sendTelegramMessage(message) {
       return { success: false, error: 'No Telegram Chat ID configured' };
     }
 
-    // Нормално изпращане на съобщение с конфигуриран Chat ID
+    
     const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
     console.log('Sending to Telegram API:', { 
       url: url.substring(0, 50) + '...',
@@ -266,7 +262,7 @@ async function sendTelegramMessage(message) {
 export async function sendOrderNotification(order) {
   console.log('Starting sendOrderNotification with order ID:', order._id);
   try {
-    // Debug logging
+  
     console.log('Order data for email:', {
       phone: order.phone,
       streetAddress: order.streetAddress,
@@ -276,7 +272,7 @@ export async function sendOrderNotification(order) {
       userEmail: order.userEmail || 'guest'
     });
     
-    // Форматиране на продуктите в поръчката
+    
     const productsHtml = order.cartProducts.map(product => {
       const extras = product.extras?.length > 0 
         ? `<br>Екстри: ${product.extras.map(e => e.name).join(', ')}` 
@@ -292,17 +288,17 @@ export async function sendOrderNotification(order) {
       `;
     }).join('');
     
-    // Изчисляване на общата сума
+    
     let subtotal = 0;
     for (const product of order.cartProducts) {
       let productPrice = product.basePrice || 0;
       
-      // Add size price if available
+      
       if (product.size && product.size.price) {
         productPrice += product.size.price;
       }
       
-      // Add extras prices if available
+      
       if (product.extras && product.extras.length > 0) {
         for (const extra of product.extras) {
           if (extra.price) {
@@ -313,14 +309,14 @@ export async function sendOrderNotification(order) {
       
       subtotal += productPrice * (product.quantity || 1);
     }
-    // Закръгляне до втория знак след десетичната запетая
+   
     subtotal = parseFloat(subtotal.toFixed(2));
     
-    // Изчисляване на такса за доставка въз основа на настройките
+    
     const deliveryFee = order.deliveryFee !== undefined ? order.deliveryFee : await calculateDeliveryFee(subtotal);
     const total = parseFloat((subtotal + deliveryFee).toFixed(2));
     
-    // Информация за адреса
+    
     const addressInfo = `
       <p><strong>Телефон:</strong> ${order.phone}</p>
       <p><strong>Адрес:</strong> ${order.streetAddress}</p>
@@ -328,7 +324,7 @@ export async function sendOrderNotification(order) {
       ${order.notes ? `<p><strong>Забележки:</strong> ${order.notes}</p>` : ''}
     `;
     
-    // Изпращане на имейла
+   
     console.log('Preparing to send email with data:', {
       from: `"MOLLY Food Ordering" <${process.env.EMAIL_USER || 'mineralhotelinfo@gmail.com'}>`,
       to: 'miroslavsinanov72@gmail.com',
@@ -379,7 +375,7 @@ export async function sendOrderNotification(order) {
       `,
     });
     
-    // Подготовка на съобщение за Telegram
+   
     const telegramMessage = `
 <b>🛍️ Нова поръчка #${order._id}</b>
 
@@ -407,7 +403,7 @@ ${deliveryFee === 0 ? '🎉 <b>Безплатна доставка!</b>' : ''}
 💳 <b>Статус:</b> ${order.paid ? 'Платена' : 'Плащане при доставка'}
     `;
     
-    // Изпращане на съобщение в Telegram
+    
     await sendTelegramMessage(telegramMessage);
     
     console.log('Email sent successfully:', {
@@ -472,7 +468,7 @@ export async function sendTestEmail() {
     
     results.email = { success: true, messageId: info.messageId };
     
-    // Изпращане на тестово съобщение в Telegram
+    
     const telegramResult = await sendTelegramMessage(`
 <b>🧪 Тестово съобщение от MOLLY Food Ordering</b>
 

@@ -6,7 +6,7 @@ export const metadata = {
     canonical: 'https://molly.bg/profile'
   },
   robots: {
-    index: false,  // Не индексираме личната страница на потребителя
+    index: false,  
     follow: true,
   },
   openGraph: {
